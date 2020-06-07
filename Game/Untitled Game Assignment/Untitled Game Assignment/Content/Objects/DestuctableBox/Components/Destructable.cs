@@ -67,7 +67,7 @@ class Destructable : Component
     private void Splinter()
     {
         Rect r = new Rect(Transform.Position,renderer.Sprite.Bounds.Size.ToVector2());
-        System.Random rng = new System.Random((int)DateTime.Now.Ticks);
+        System.Random rng = new System.Random("FixedFor NOW".GetHashCode());
 
         Vector2[] seedPoints = new Vector2[]
         {

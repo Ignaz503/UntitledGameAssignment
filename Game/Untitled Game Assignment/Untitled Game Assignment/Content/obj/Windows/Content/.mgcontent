@@ -4,14 +4,14 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/studium/SimAndAnim/SimAndAnim/Git/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Arial.spritefont</File>
-    <File>D:/studium/SimAndAnim/SimAndAnim/Git/Game/Untitled Game Assignment/Untitled Game Assignment/Content/PolygonShader.fx</File>
-    <File>D:/studium/SimAndAnim/SimAndAnim/Git/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/bullet.png</File>
-    <File>D:/studium/SimAndAnim/SimAndAnim/Git/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/cursor.png</File>
-    <File>D:/studium/SimAndAnim/SimAndAnim/Git/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/heart.png</File>
-    <File>D:/studium/SimAndAnim/SimAndAnim/Git/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playershoulders.png</File>
-    <File>D:/studium/SimAndAnim/SimAndAnim/Git/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/spikeball.png</File>
-    <File>D:/studium/SimAndAnim/SimAndAnim/Git/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/WhiteSquare.png</File>
+    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Arial.spritefont</File>
+    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/PolygonShader.fx</File>
+    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/bullet.png</File>
+    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/cursor.png</File>
+    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/heart.png</File>
+    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playershoulders.png</File>
+    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/spikeball.png</File>
+    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/WhiteSquare.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
