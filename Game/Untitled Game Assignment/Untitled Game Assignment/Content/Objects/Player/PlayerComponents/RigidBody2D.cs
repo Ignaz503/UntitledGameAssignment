@@ -40,7 +40,7 @@ public class RigidBody2D : Component, IUpdate
     public float Energy()
     {
         float imp = Transform.Velocity.Length() * Transform.Velocity.Length() * Mass; //E=mc^2
-        return imp * 0.5f; //scale back
+        return imp * 0.75f; //scale back
     }
 }
 

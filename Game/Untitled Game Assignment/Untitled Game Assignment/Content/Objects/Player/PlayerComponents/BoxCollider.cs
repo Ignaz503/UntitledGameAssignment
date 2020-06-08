@@ -91,10 +91,15 @@ public class BoxCollider : Component, IUpdate
                 {
                     //Debug.Log("adding impulse of " + Transform.Velocity + " to " + collider.Name);
                     // Add existing movement and impulse to colliding RigidBody
-                    Vector2 direction = Transform.Velocity;
-                    direction.Normalize();
-                    opponent.AddImpulse(direction, self.Energy());
-                    
+                    //Vector2 direction = Transform.Velocity;
+                    Vector2 opp_direction = query.GameObject.Transform.Velocity - ((2.0f * self.Mass) / (opponent.Mass + self.Mass)) * (query.GameObject.Transform.Velocity - Transform.Velocity);
+                    opp_direction.Normalize();
+                    opponent.AddImpulse(opp_direction, self.Energy());
+
+                    /*Vector2 self_direction = Transform.Velocity - ((2.0f * opponent.Mass) / (opponent.Mass + self.Mass)) * (Transform.Velocity - query.GameObject.Transform.Velocity);
+                    self_direction.Normalize();
+                    self.AddImpulse(self_direction, opponent.Energy());*/
+
                     //Slow own movement if have RigidBody2D and opponent bigger
                     CollisionMultiplier = Math.Min(1.0f, self.Mass / opponent.Mass);
                 }

@@ -153,7 +153,9 @@ namespace UntitledGameAssignment
 
             player.AddComponent( ( obj ) => new MouseLocationBasedRotationController( obj ) );
             player.AddComponent( ( obj ) => new ShootScript( obj, 4.0f ) );
-            player.AddComponent( (obj) => new RigidBody2D(obj, 10.0f) );
+            player.AddComponent( ( obj ) => new RigidBody2D(obj, 50.0f) );
+
+            player.AddComponent( ( obj ) => new VectorField(obj) );
 
             List<SortingLayer> neglectSelf = new List<SortingLayer>();
             neglectSelf.Add(SortingLayer.Entities + 1);
@@ -167,21 +169,21 @@ namespace UntitledGameAssignment
                 "Sprites/playershoulders",
                 Keys.Y,
                 Keys.X);
+
             p2.AddComponent( (obj) => new RigidBody2D(obj, 1.5f));
             p2.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities) );
 
-            ////temp, will move this
-            //var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
-            //spike.AddComponent( ( obj ) => new GravPull( obj, tankplayer, mass: 0.5f, effectiveRadius: 300.0f, rotate: true ) );
+            var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
+            spike.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 300.0f, rotate: true ) );
 
             var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
-            red_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
+            red_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
             
             var blue_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(500, 80)), heal: player, Color.Blue);
-            blue_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
+            blue_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
             
             var green_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(200, 300)), heal: player, Color.Green);
-            green_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
+            green_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
 
             //var destructableBox = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/WhiteSquare"),Camera.Active.ScreenToWorld(new Vector2(500, 300)),player);
 
