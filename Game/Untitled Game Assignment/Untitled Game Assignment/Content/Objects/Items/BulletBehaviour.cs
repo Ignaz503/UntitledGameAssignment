@@ -45,6 +45,11 @@ public class BulletBehaviour : Component, IUpdate
             {
                 if (collider != Shooter) //cant hit self
                 {
+                    if (collider is DestructableBox)
+                    {
+                        collider.GetComponent<Destructable>().OnHit(GameObject.GetComponent<BoxCollider>());
+                    }
+
                     //collider.Destroy();
                     this.GameObject.Destroy();
                 }
