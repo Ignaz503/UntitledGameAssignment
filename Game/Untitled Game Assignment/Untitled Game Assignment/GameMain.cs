@@ -112,9 +112,9 @@ namespace UntitledGameAssignment
 
             var player = LoadPlayers();
 
-            LoadTestGrid();
+            //LoadTestGrid();
 
-            //LoadTestPathFollow();
+            LoadTestPathFollow();
 
             SetupCamera(player);
 
@@ -217,7 +217,7 @@ namespace UntitledGameAssignment
         {
             var obj = new GameObject();
             obj.Transform.Position = Camera.Active.ScreenToWorld( Vector2.Zero );
-            obj.AddComponent( ( j ) => new PathCreator( AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ), j ) );
+            obj.AddComponent( ( j ) => new PathCreator( AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ), .5f, j ) );
         }
 
         /// <summary>

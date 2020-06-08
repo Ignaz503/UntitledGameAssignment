@@ -25,12 +25,15 @@ public class PathCreator : Component, IUpdate, IDraw
 
     SpriteFont debugFont;
 
-    public PathCreator(Texture2D pathMarker,  GameObject obj ) : base( obj )
+    float followSpeed;
+
+    public PathCreator( Texture2D pathMarker, float followSpeed, GameObject obj ) : base( obj )
     {
         this.pathMarker = pathMarker ?? throw new ArgumentNullException( nameof( pathMarker ) );
         points = new List<Vector2>();
         pathMarkerTextureOrigin = new Vector2(pathMarker.Width*0.5f,pathMarker.Height*0.5f);
-        debugFont = AssetManager.Load<SpriteFont>( "Arial" ); 
+        debugFont = AssetManager.Load<SpriteFont>( "Arial" );
+        this.followSpeed = followSpeed;
     }
 
     public override void OnDestroy()
@@ -58,6 +61,22 @@ public class PathCreator : Component, IUpdate, IDraw
         {
             Reset();
         }
+
+        float change = 0f;
+        if (Input.IsKeyDown( Keys.D2 ))
+        {
+            change += 0.1f;
+        }
+        if (Input.IsKeyDown( Keys.D1 ))
+        {
+            change -= 0.1f;
+        }
+
+        if (pathFollower != null)
+        {
+            pathFollower.Speed += change;
+        }
+
     }
 
     private void Reset()
@@ -84,7 +103,7 @@ public class PathCreator : Component, IUpdate, IDraw
 
             obj.AddComponent( ( j ) => new SpriteRenderer( "Sprites/playershoulders",  Color.White, 1, j ) );
 
-            pathFollower = obj.AddComponent( ( j ) => new PathFollower( p, 0.05f,  j ) );
+            pathFollower = obj.AddComponent( ( j ) => new PathFollower( p, 0.005f,  j, followSpeed ) );
 
             AddObjectsToEitherSide(obj, recursion: 2 );
 

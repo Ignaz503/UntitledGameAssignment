@@ -152,7 +152,7 @@ public class Path
 
         //rebase t
         float newT;
-        if (currentIdx == Points.Length - 1)
+        if (currentIdx == Points.Length - 1 && Loop)
         {
             //looping to start
             float nextT = (float)(currentIdx+1)/(float)length;

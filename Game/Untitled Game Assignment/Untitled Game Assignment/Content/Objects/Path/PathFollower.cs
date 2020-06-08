@@ -23,13 +23,16 @@ public class PathFollower : Component, IFixedUpdate
 
     float sampleRate;
 
+    public float Speed;
+
     Dictionary<float, float> arcLUT;
 
-    public PathFollower( Path simplePath, float sampleRate, GameObject obj, int startIndx = 0 ) : base( obj )
+    public PathFollower( Path simplePath, float sampleRate, GameObject obj, float speed, int startIndx = 0  ) : base( obj )
     {
         pathToFollow = simplePath ?? throw new System.ArgumentNullException( nameof( simplePath ) );
         t = 0f;
         this.sampleRate = sampleRate;
+        this.Speed = speed;
         BuildArcLUT();
     }
 
@@ -71,14 +74,14 @@ public class PathFollower : Component, IFixedUpdate
 
     private void FollowPathArc( Path p )
     {
-        t += TimeInfo.FixedDeltaTime*0.5f;
+        t += TimeInfo.FixedDeltaTime*Speed;
 
         if (t >= 1f)
         {
-            t -= 1f;
+            t = 0f;
         }
 
-        float arc = FindArc(t);
+        float arc = FindArcStep(t);
 
 
         var newPos = pathToFollow.FollowPathCatmullRom(arc);
@@ -92,7 +95,7 @@ public class PathFollower : Component, IFixedUpdate
         Transform.Position = newPos;
     }
 
-    private float FindArc( float t )
+    private float FindArcStep( float t )
     {
         if (arcLUT.ContainsKey( t ))
             return arcLUT[t];
