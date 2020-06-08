@@ -33,13 +33,13 @@ public static class Shatter
     {
         var polygons = obj_polygons as List<IPolygon>;
 
+        float tForce = (float)rng.NextDouble();
         for (int i = 0; i < polygons.Count; i++)
         {
             var poly = polygons[i];
             var newTexture = new Texture2D(GameMain.Instance.GraphicsDevice,textureSize.X,textureSize.Y);
 
             float tDir = (float)rng.NextDouble();
-            float tForce = (float)rng.NextDouble();
             ThreadedDataRequestor.Instance.RequestData(()=> GenerateTexture(poly,textureSize,newTexture,originalTexture.GetPixels(),bounds),(t)=>MakeGameobject(t,positon,hitPosition,tDir,tForce));
         }
     }
@@ -105,7 +105,7 @@ public static class Shatter
         dir = new Vector2( (float)Math.Cos( moveAngle ), (float)Math.Sin( moveAngle ) );
 
 
-        body.AddImpulse( dir, 10f * tForce );
+        body.AddImpulse( dir, 5f * tForce );
 
     }
 }
