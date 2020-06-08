@@ -461,8 +461,9 @@ namespace UntitledGameAssignment.Core
             }
 
             //TODO: move this maybe, although it does work here, just doesnt fit in this method
-           this.Position += this.Velocity;
-           this.Velocity -= this.Velocity * 0.99f;
+            this.Position += this.Velocity;
+            //this.Velocity -= this.Velocity * 0.99f;
+            this.Velocity *= 0.75f;
         }
 
         /// <summary>

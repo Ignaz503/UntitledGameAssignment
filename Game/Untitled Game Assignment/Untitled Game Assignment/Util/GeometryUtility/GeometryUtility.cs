@@ -9,6 +9,7 @@ using GeoUtil.Linear;
 using GeoUtil.Vertex;
 using Util.CustomMath;
 using Loyc.Collections;
+
 /// <summary>
 /// some basic geometry utitltiy
 /// polygon inclusion testing from: http://geomalgorithms.com/a03-_inclusion.html

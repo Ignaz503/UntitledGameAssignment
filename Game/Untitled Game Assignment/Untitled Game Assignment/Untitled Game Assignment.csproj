@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -14,6 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -25,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.2</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -35,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.2</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -63,7 +67,10 @@
     <Compile Include="Content\Objects\Cursor\MouseLocationBasedPositionController.cs" />
     <Compile Include="Content\Objects\Player\PlayerComponents\BoxCollider.cs" />
     <Compile Include="Content\Objects\Player\PlayerComponents\MovementController.cs" />
+    <Compile Include="Content\Objects\Player\PlayerComponents\RigidBody2D.cs" />
     <Compile Include="Content\Objects\Player\PlayerComponents\ShootScript.cs" />
+    <Compile Include="Content\Objects\Player\PlayerComponents\SpriteFlicker.cs" />
+    <Compile Include="Content\Objects\Player\PlayerComponents\VelocityBasedRotationController.cs" />
     <Compile Include="Content\Objects\Player\TempPlayer.cs" />
     <Compile Include="Content\Objects\TestPolygon\TestPolygon.cs" />
     <Compile Include="Content\Objects\TileMap\AStarVisualize.cs" />
@@ -100,6 +107,7 @@
     <Compile Include="Core\Transform\Transform.cs" />
     <Compile Include="Core\Transform\TransformException.cs" />
     <Compile Include="Core\Transform\TransformLoopException.cs" />
+    <Compile Include="Content\Objects\Player\TankTreads.cs" />
     <Compile Include="Util\AssetManagment\AssetManager.cs" />
     <Compile Include="Util\DataStructure\Heap.cs" />
     <Compile Include="Util\DataStructure\PriorityQueue.cs" />
@@ -218,6 +226,7 @@
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
+    <None Include="app.config" />
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Util\Vornoi\Lib\License.md" />

@@ -123,5 +123,13 @@ namespace UntitledGameAssignment.Core.Components
         public virtual void DoShaderSetup() 
         { }
 
+        public void changeSprite(string spritePath)
+        {
+            this.Sprite = AssetManager.Load<Texture2D>(spritePath);
+        }
+        public void changeSprite(Texture2D sprite)
+        {
+            this.Sprite = sprite;
+        }
     }
 }

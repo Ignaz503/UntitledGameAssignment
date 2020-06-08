@@ -50,7 +50,7 @@ public class GravPull : Component, IUpdate
     }
 
     /// <summary>
-    /// monstly accurate Newtonian gravity calculation
+    /// mostly accurate Newtonian gravity calculation
     /// </summary>
     public void Attract()
     {

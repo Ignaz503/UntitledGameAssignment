@@ -11,14 +11,14 @@ namespace Util.FrameTimeInfo
         /// <summary>
         /// the time step from frame to frame
         /// </summary>
-        static GameTime timeStep;
+        public static GameTime timeStep;
         /// <summary>
         /// the time step from frame to frame
         /// </summary>
-        internal static GameTime TimeStep 
+        internal static GameTime TimeStep
         {
             private get => timeStep;
-            set 
+            set
             {
                 timeStep = value;
                 CalcFixedUpdateDelta();
@@ -71,14 +71,14 @@ namespace Util.FrameTimeInfo
         {
             float t = fixedUpdateTimeCarray + UnscaledDeltaTime;
 
-            NumberFixedUpdates = (int)Math.Floor( t / FixedUpdateRate );
+            NumberFixedUpdates = (int)Math.Floor(t / FixedUpdateRate);
 
             fixedUpdateTimeCarray = t - (NumberFixedUpdates * FixedUpdateRate);
 
             //UnscaledFixedDeltaTime = FixedUpdateRate;
         }
 
-        internal static void Initialize( float timeScale, float fixedUpdateRate ) 
+        internal static void Initialize(float timeScale, float fixedUpdateRate)
         {
             TimeScale = timeScale;
             FixedUpdateRate = fixedUpdateRate;

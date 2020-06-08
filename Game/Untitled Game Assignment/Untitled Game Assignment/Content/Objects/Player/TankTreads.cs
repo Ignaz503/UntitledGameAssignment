@@ -8,8 +8,9 @@ using Util.CustomDebug;
 using System;
 using UntitledGameAssignment.Core.SceneGraph;
 using Util.SortingLayers;
+using System.Collections.Generic;
 
-public class TempPlayer : GameObject
+public class TankTreads : GameObject
 {
     public SpriteRenderer SpriteRen;
 
@@ -22,29 +23,20 @@ public class TempPlayer : GameObject
         blue
     }
 
-    public TempPlayer(Vector2 position, Func<GameObject, MovementController> mC, SortingLayer layer, tint t = tint.white, String sprite_file = "Sprites/playershoulders", Keys increase = Keys.Q,Keys decrease = Keys.E, string name = null) :base()
+    public TankTreads(Vector2 position, SortingLayer layer, GameObject parent_obj, tint t = tint.white, String sprite_file = "Sprites/playerlegl") : base()
     {
         Transform.Position = position;
-
         Transform.Velocity = Vector2.Zero;
 
-        SpriteRen = AddComponent( (obj) => new SpriteRenderer( sprite_file, ResolveTint(t), layer, obj) );
+        Transform.Parent = parent_obj.Transform;
 
-        if(mC != null)
-            AddComponent(mC);
+        SpriteRen = AddComponent((obj) => new SpriteRenderer(sprite_file, ResolveTint(t), layer-1, obj));
 
-        //AddComponent( (obj) => new MouseLocationBasedRotationController(obj));
-
-        //AddComponent( (obj) => new ShootScript(obj, 0.4f));
-
-        //AddComponent((obj) => new TextRenderer("test", t == tint.white ? Color.White : Color.LightGray, 1, obj));
+        AddComponent( (obj) => new VelocityBasedRotationController(obj, Transform.Parent));
 
         //AddComponent( ( o ) => new ChildInfoPrinter( o ) );
 
-        if (name == null)
-            Name = $"Temporary Player Gameobject {ID}";
-        else
-            Name = name;
+        Name = $"Tank Tread Player Gameobject {ID}";
     }
 
     /// <summary>
@@ -93,23 +85,5 @@ public class TempPlayer : GameObject
         }
 
         return return_color;
-    }
-}
-
-public class ChildInfoPrinter : Component, IUpdate
-{
-    public ChildInfoPrinter( GameObject obj ) : base( obj )
-    {
-    }
-
-    public override void OnDestroy()
-    {}
-
-    public void Update()
-    {
-        if (Input.IsKeyDown(Keys.F))
-        {
-            Debug.Log($"Name: {GameObject.Name}, child count: {Transform.ChildCount}");
-        }
     }
 }

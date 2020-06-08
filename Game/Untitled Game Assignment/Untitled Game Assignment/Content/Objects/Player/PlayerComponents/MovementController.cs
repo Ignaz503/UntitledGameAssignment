@@ -10,21 +10,19 @@ using Util.CustomDebug;
 public class MovementController : Component, IUpdate
 {
     float walkSpeed;
-    float dashSpeed;
 
     Keys up;
     Keys down;
     Keys left;
     Keys right;
 
-    public MovementController( GameObject obj, Keys up = Keys.W, Keys down = Keys.S, Keys left = Keys.A, Keys right = Keys.D, float walkSpeed = 2f, float dashSpeed = 1f) : base( obj )
+    public MovementController( GameObject obj, Keys up = Keys.W, Keys down = Keys.S, Keys left = Keys.A, Keys right = Keys.D, float walkSpeed = 2f) : base( obj )
     {
         this.up = up;
         this.down = down;
         this.left = left;
         this.right = right;
         this.walkSpeed = walkSpeed;
-        this.dashSpeed = dashSpeed;
     }
 
     public override void OnDestroy()
@@ -55,10 +53,7 @@ public class MovementController : Component, IUpdate
         {
             desiredDir += new Vector2( 1, 0 );
         }
-        if (Input.IsKeyDown(Keys.Space))
-        {
-            desiredDir *= dashSpeed;
-        }
+
         Transform.Velocity += desiredDir * walkSpeed * TimeInfo.DeltaTime;
     }
 }

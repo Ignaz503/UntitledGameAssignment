@@ -111,13 +111,11 @@ namespace UntitledGameAssignment
 
             var player = LoadPlayers();
 
-            //LoadTestPolygon();
-
             //LoadTestGrid();
 
-            //LoadTestPathFollow();
-
             LoadTestPolygon();
+
+            //LoadTestPathFollow();
 
             SetupCamera(player);
 
@@ -145,43 +143,68 @@ namespace UntitledGameAssignment
 
         private GameObject LoadPlayers()
         {
-            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), (obj)=> new MovementController(obj, walkSpeed: 140f, dashSpeed: 35f),SortingLayer.Entities,TempPlayer.tint.gray, name:"Player");
+            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), (obj) => new MovementController(obj, walkSpeed: 10f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
+            
+            TankTreads treads = new TankTreads(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), SortingLayer.Entities, player, TankTreads.tint.white, "Sprites/playerlegr");
+            List<String> sprites = new List<string>();
+            sprites.Add("Sprites/playerlegr");
+            sprites.Add("Sprites/playerlegl");
+            treads.AddComponent( (obj) => new SpriteFlicker(obj, treads.SpriteRen, sprites, true, 0.5f));
+
             player.AddComponent( ( obj ) => new MouseLocationBasedRotationController( obj ) );
-            player.AddComponent( ( obj ) => new ShootScript( obj, 2.45f ) );
+            player.AddComponent( ( obj ) => new ShootScript( obj, 4.0f ) );
+            player.AddComponent( (obj) => new RigidBody2D(obj, 10.0f) );
+
+            List<SortingLayer> neglectSelf = new List<SortingLayer>();
+            neglectSelf.Add(SortingLayer.Entities + 1);
+            player.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities + 1, true, neglectSelf) );
 
             var p2 = new TempPlayer(
                 Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()+Vector2.One*50f),
                 null,
                 SortingLayer.EntitesSubLayer(1),
                 TempPlayer.tint.white,
+                "Sprites/playershoulders",
                 Keys.Y,
                 Keys.X);
+            p2.AddComponent( (obj) => new RigidBody2D(obj, 1.5f));
+            p2.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities) );
 
             ////temp, will move this
-            var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
-            spike.AddComponent( ( obj ) => new GravPull( obj, player, mass: 1.0f, effectiveRadius: 300.0f, rotate: true ) );
+            //var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
+            //spike.AddComponent( ( obj ) => new GravPull( obj, tankplayer, mass: 0.5f, effectiveRadius: 300.0f, rotate: true ) );
 
             var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
-            red_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.5f, effectiveRadius: 200.0f, rotate: false ) );
-
+            red_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
+            
             var blue_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(500, 80)), heal: player, Color.Blue);
-            blue_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.5f, effectiveRadius: 200.0f, rotate: false ) );
-
+            blue_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
+            
             var green_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(200, 300)), heal: player, Color.Green);
-            green_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.5f, effectiveRadius: 200.0f, rotate: false ) );
-
-            var destructableBox = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/WhiteSquare"),Camera.Active.ScreenToWorld(new Vector2(500, 300)),player);
+            green_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
 
             return player;
         }
 
-        void LoadTestPolygon() 
+        void LoadTestPolygon()
         {
-            var center = Camera.Active.ScreenToWorld( VirtualViewport.Bounds.Center.ToVector2() );
+            var pol = new TestPolygon(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), new Polygon(new Vector2[]
+                                {
+                                    new Vector2(-.5f,-.5f),
+                                    new Vector2(-.5f,.5f),
+                                    new Vector2(.5f,.5f)
+                                    ,new Vector2(.5f,-.5f)
+                                }));
 
-            var tP = new TestPolygon();
-            tP.Transform.Position = center;
-
+            var pol1 = new TestPolygon(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2() + Vector2.UnitX * 50f), new Polygon(new Vector2[]
+                                {
+                                    new Vector2(0.6f,1f),
+                                    new Vector2(0,0.8f),
+                                    new Vector2(0.4f,0),
+                                    new Vector2(0.8f,0.6f),
+                                    new Vector2(1f,0f),
+                                    new Vector2(1f,0.8f)
+                                }));
         }
 
         private void LoadTestGrid()

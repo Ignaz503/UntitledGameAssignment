@@ -6,18 +6,19 @@ using Microsoft.Xna.Framework;
 using System;
 using Microsoft.Xna.Framework.Input;
 using Util.CustomDebug;
+using System.Threading;
 
 public class BulletBehaviour : Component, IUpdate
 {
-    Vector2 Direction;
-    float Speed;
     GameObject Shooter;
+    double Start;
+    double TimeToDie;
 
-    public BulletBehaviour( GameObject obj, GameObject shooter, Vector2 direction, float speed ) : base( obj )
+    public BulletBehaviour( GameObject obj, GameObject shooter, double timeToDie = 2.0f ) : base( obj )
     {
-        Direction = direction;
-        Speed = speed;
         Shooter = shooter;
+        Start = TimeInfo.timeStep.TotalGameTime.TotalSeconds;
+        TimeToDie = timeToDie;
     }
 
     public override void OnDestroy()
@@ -26,7 +27,14 @@ public class BulletBehaviour : Component, IUpdate
     public void Update()
     {
         Hit();
-        Transform.Velocity = Direction * Speed;
+
+        if (TimeInfo.timeStep.TotalGameTime.TotalSeconds > Start + TimeToDie)
+        {
+            this.GameObject.Destroy();
+        }
+        
+        //Debug.Log("V = " + Transform.Velocity);
+        //Transform.Velocity = Direction * Speed;
     }
 
     public void Hit()
@@ -37,14 +45,7 @@ public class BulletBehaviour : Component, IUpdate
             {
                 if (collider != Shooter) //cant hit self
                 {
-                    if (collider is DestructableBox)
-                    {
-                        var dest = collider.GetComponent<Destructable>();
-
-                        dest.OnHit( GameObject.GetComponent<BoxCollider>() );
-                        continue;
-                    }
-                    collider.Destroy();
+                    //collider.Destroy();
                     this.GameObject.Destroy();
                 }
             }

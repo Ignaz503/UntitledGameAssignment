@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 using Util.CustomDebug;
 using System;
 using Util.CustomMath;
+using Util.SortingLayers;
+using System.Collections.Generic;
 
 public class Bullet : GameObject
 {
@@ -23,9 +25,15 @@ public class Bullet : GameObject
 
         SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/bullet", Color.White, 1, obj));
 
-        AddComponent( (obj) => new BoxCollider(spriteRen, obj) );
+        List<SortingLayer> player = new List<SortingLayer>();
+        player.Add(SortingLayer.Entities + 1);
+        AddComponent( (obj) => new BoxCollider(spriteRen, obj, SortingLayer.Entities + 1, true, player) );
+
+        RigidBody2D rb = AddComponent((obj) => new RigidBody2D(obj, 1.01f));
                       
-        AddComponent( (obj) => new BulletBehaviour(obj, shooter, direction, speed) );
+        AddComponent( (obj) => new BulletBehaviour(obj, shooter) );
+
+        rb.AddImpulse(direction, speed);
 
     }
 }

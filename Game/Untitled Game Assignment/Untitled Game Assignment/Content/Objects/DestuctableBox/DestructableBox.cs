@@ -18,7 +18,7 @@ public class DestructableBox : GameObject
     {
         System.Diagnostics.Debug.WriteLine( "Hello" );
         spriteRendrer = AddComponent(j => new SpriteRenderer( sprite, Color.White, 1, j) );
-        collider = AddComponent(j => new BoxCollider(spriteRendrer,j));
+        collider = AddComponent(j => new BoxCollider(spriteRendrer,j, SortingLayer.Entities));
         AddComponent( ( obj ) => { return new Destructable( collider, spriteRendrer, player, obj ); } );
         Transform.Position = position;
     }
