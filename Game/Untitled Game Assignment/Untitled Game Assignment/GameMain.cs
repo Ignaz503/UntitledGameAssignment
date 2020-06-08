@@ -183,10 +183,10 @@ namespace UntitledGameAssignment
             var green_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(200, 300)), heal: player, Color.Green);
             green_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
 
-            var destructableBox = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/WhiteSquare"),Camera.Active.ScreenToWorld(new Vector2(500, 300)),player);
-            var destructableBox1 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/WhiteSquare"),Camera.Active.ScreenToWorld(new Vector2(130, 100)),player);
-            var destructableBox2 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/WhiteSquare"),Camera.Active.ScreenToWorld(new Vector2(500, 80)),player);
-            var destructableBox3 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/WhiteSquare"),Camera.Active.ScreenToWorld(new Vector2(200, 300)),player);
+            var destructableBox = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(500, 300)),player);
+            var destructableBox1 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(130, 100)),player);
+            var destructableBox2 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(500, 80)),player);
+            var destructableBox3 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(200, 300)),player);
 
             return player;
         }
