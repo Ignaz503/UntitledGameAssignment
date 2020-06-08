@@ -131,15 +131,6 @@ namespace UntitledGameAssignment
             obj.AddComponent( j => new UpdateRateAdapter( Keys.D9, Keys.D0, j ) );
         }
 
-        private void LoadTextTest()
-        {
-            GameObject obj = new GameObject();
-
-            obj.Transform.Position = Camera.Active.ScreenToWorld( VirtualViewport.Bounds.Center.ToVector2() );
-            obj.Transform.Scale = Vector2.One * .5f;
-            obj.AddComponent( ( j ) => new TextRenderer( "This is a Test", Color.Black, 0, j ) );
-        }
-
         private GameObject LoadPlayers()
         {
             TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), (obj) => new MovementController(obj, walkSpeed: 10f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
