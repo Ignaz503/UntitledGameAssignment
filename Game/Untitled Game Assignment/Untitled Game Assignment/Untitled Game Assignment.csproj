@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Content\Objects\DestuctableBox\Components\Destructable.cs" />
     <Compile Include="Content\Objects\DestuctableBox\DestructableBox.cs" />
+    <Compile Include="Content\Objects\DestuctableBox\Helper\Shatter.cs" />
     <Compile Include="Content\Objects\Items\Bullet.cs" />
     <Compile Include="Content\Objects\Path\Path.cs" />
     <Compile Include="Content\Objects\Path\PathCreator.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Util\Rendering\Viewport\WindowedVirtualViewport.cs" />
     <Compile Include="Util\SortingLayer\SortingLayer.cs" />
     <Compile Include="Core\Components\ThreadedDataRequestor\ThreadedDataRquester.cs" />
+    <Compile Include="Util\TextureHelper\Texture2DExtension.cs" />
     <Compile Include="Util\Time\TimeInfo.cs" />
     <Compile Include="Util\Math\VectorMath.cs" />
     <Compile Include="Util\Vornoi\Lib\FortunesAlgorithm.cs" />

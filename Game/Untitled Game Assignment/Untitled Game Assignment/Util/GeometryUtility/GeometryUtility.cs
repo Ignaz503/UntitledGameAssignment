@@ -296,6 +296,18 @@ namespace GeoUtil
             return CheckPointPositionAgainstLine(lP0, lP1, p, LinePosition.left);
         }
 
+        /// <summary>
+        /// if lp0 is left of line p0 p1
+        ///  > 0 left
+        ///   = 0 on line
+        ///   < 0 right
+        /// </summary>
+        public static float IsLeft( Vector2 P0, Vector2 P1, Vector2 P2 )
+        {
+            return ((P1.X - P0.X) * (P2.Y - P0.Y)
+                        - (P2.X - P0.X) * (P1.Y - P0.Y));
+        }
+
 
         /// <summary>
         /// check if p is left of line
@@ -393,27 +405,27 @@ namespace GeoUtil
         /// <param name="p">point to test</param>
         /// <param name="polygon">polygon to test against</param>
         /// <returns> == 0 iff outside</returns>
-        public static int WindingNumberPointInPolygon(Vector2 p, in IPolygon polygon)
+        public static int WindingNumberPointInPolygon( Vector2 p, in IPolygon polygon )
         {
-            int windingNumber = 0;
-            var pol = new EdgeEnumeratedPolygon<Edge>(polygon, Edge.Create);
-            foreach (Edge edge in pol)
-            {
-                if (edge.SPoint.Y <= p.Y && edge.EPoint.Y > p.Y)
+            int    wn = 0;    // the  winding number counter
+            // loop through all edges of the polygon
+            for (int i = 0; i < polygon.VertexCount; i++)
+            {   // edge from V[i] to  V[i+1]
+                if (polygon[i].Y <= p.Y)
                 {
-                    //upward crossing
-                    if (IsLeftOfLine(edge.SPoint, edge.EPoint, p))
-                        windingNumber++;
-
-                }
-                else if (edge.EPoint.Y <= p.Y)
+                    // start y <= P.y
+                    if (polygon[(i + 1) % polygon.VertexCount].Y > p.Y)      // an upward crossing
+                        if (IsLeft( polygon[i], polygon[(i + 1) % polygon.VertexCount], p ) > 0f)  // P left of  edge
+                            ++wn;            // have  a valid up intersect
+                } else
                 {
-                    //downward crossing
-                    if (IsRightOfLine(edge.SPoint, edge.EPoint, p))
-                        windingNumber--;
+                    // start y > P.y (no test needed)
+                    if (polygon[(i + 1) % polygon.VertexCount].Y <= p.Y)     // a downward crossing
+                        if (IsLeft( polygon[i], polygon[(i + 1) % polygon.VertexCount], p ) < 0f)  // P right of  edge
+                            --wn;            // have  a valid down intersect
                 }
             }
-            return windingNumber;
+            return wn;
         }
 
         /// <summary>
@@ -536,7 +548,7 @@ namespace GeoUtil
         /// <returns>true if contained</returns>
         public static bool PolygonContains(Vector2 p, in IPolygon polygon)
         {
-            return polygon.Bounds.Contains(p) && WindingNumberPointInPolygon(p, polygon) != 0;
+            return polygon.Bounds.Contains(p) && (WindingNumberPointInPolygon(p, polygon) != 0);
         }
 
         struct MinMaxTracker 

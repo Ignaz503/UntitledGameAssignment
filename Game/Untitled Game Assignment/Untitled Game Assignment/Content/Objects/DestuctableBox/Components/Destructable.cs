@@ -16,6 +16,8 @@ using Util.Rendering;
 using Util.SortingLayers;
 using UntitledGameAssignment;
 using System.IO;
+using GeoUtil.HelperCollections.Grids;
+using System.Text;
 
 class Destructable : Component
 {
@@ -23,6 +25,8 @@ class Destructable : Component
     SpriteRenderer renderer;
     TempPlayer player;
     private bool isShattered;
+
+    Rect TransformRect => new Rect( Transform.Position, renderer.Sprite.Bounds.Size.ToVector2() );
 
     public Destructable(BoxCollider collider, SpriteRenderer r, TempPlayer player,GameObject obj ) : base( obj )
     {
@@ -46,126 +50,91 @@ class Destructable : Component
         {
             if (other.IsTouchingBottom( ownCollider ))
             {
-                SplinterFromBottom();
+                SplinterFromBottom(other.Transform.Position);
             } else if (other.IsTouchingLeft( ownCollider ))
             {
-                SplinterFromLeft();
+                SplinterFromLeft( other.Transform.Position );
             } else if (other.IsTouchingRight( ownCollider ))
             {
-                SplinterFromRight();
+                SplinterFromRight( other.Transform.Position );
             } else if (other.IsTouchingTop( ownCollider ))
             {
-                SplinterFromTop();
+                SplinterFromTop( other.Transform.Position );
             } else
             {
-                Splinter();
+                Splinter( TransformRect, other.Transform.Position );
             }
         }
         this.GameObject.Destroy();
     }
 
-    private void Splinter()
+    private void Splinter(Rect seedPointsRect,Vector2 hitPosition)
     {
         Rect r = new Rect(Transform.Position,renderer.Sprite.Bounds.Size.ToVector2());
-        System.Random rng = new System.Random("FixedFor NOW".GetHashCode());
+        System.Random rng = new Random((int)DateTime.Now.Ticks);
 
-        Vector2[] seedPoints = new Vector2[]
+        var seedPointCount = rng.Next(3,9);
+
+        Vector2Int texSize = new Vector2Int(renderer.Sprite.Width,renderer.Sprite.Height);
+        var pos = Transform.Position;
+        var originaltexture = renderer.Sprite;
+
+        Vector2[] seedPoints = new Vector2[seedPointCount];
+
+
+        for (int i = 0; i < seedPointCount; i++)
         {
-            r.TopLeft + r.Size * new Vector2((float)rng.NextDouble(),(float)rng.NextDouble()),
-            r.TopLeft + r.Size * new Vector2((float)rng.NextDouble(),(float)rng.NextDouble()),
-            r.TopLeft + r.Size * new Vector2((float)rng.NextDouble(),(float)rng.NextDouble()),
-            r.TopLeft + r.Size * new Vector2((float)rng.NextDouble(),(float)rng.NextDouble()),
-            r.TopLeft + r.Size * new Vector2((float)rng.NextDouble(),(float)rng.NextDouble())
-        };
+            seedPoints[i] = seedPointsRect.TopLeft + seedPointsRect.Size * new Vector2((float)rng.NextDouble(),(float)rng.NextDouble());
 
-        var polygons = Voronoi.Shatter(seedPoints,r);
-        
-
-        for (int i = 0; i < polygons.Count; i++)
-        {
-            Debug.WriteLine( polygons[i].ToString() );
-            var obj = CreatePolygon( polygons[i],r,i,rng);
         }
 
-
-        //obj.Transform.Scale = new Vector2( Transform.Scale.X / polygons.Count, Transform.Scale.Y / polygons.Count );
+        Shatter.ShatterBox( r, seedPoints, pos, texSize, originaltexture, hitPosition, rng );
 
         this.GameObject.Destroy();
     }
 
-    GameObject CreatePolygon( IPolygon p, Rect r, int i, System.Random rng ) 
-    {
-        var newObj = new GameObject();
-        newObj.Transform.Position = GeometryUtility.CalculateCentroid( p );
-        //newObj.AddComponent( j => new GravPull( j, player, mass: 0.5f, effectiveRadius: 200.0f, rotate: false ) );
-        var t = makenewTexture( p, r, i, rng);
-
-        newObj.AddComponent( j => new SpriteRenderer( t, Color.White, SortingLayer.Entities, SpriteEffects.None, j ) );
-
-        return newObj;
-    }
-
-    Texture2D makenewTexture(IPolygon p, Rect r, int i,System.Random rng) 
-    {
-        const int w = 128;
-        const int h = 128;
-        Texture2D newTexture = new Texture2D(GameMain.Instance.GraphicsDevice,w,h);
-        Color c = new Color( rng.Next( 0, 256 ), rng.Next( 0, 256 ), rng.Next( 0, 256 ), 255 ); 
-        Color[] data = new Color[w*h];
-
-        for (int x = 0; x < w; x++)
-        {
-            for (int y = 0; y < h; y++)
-            {
-                float tx = (float)x/(float)w;
-                float ty = (float)y/(float)h;
-
-                var t = new Vector2(r.Size.X*tx,r.Size.Y*ty);
-
-                var point = r.TopLeft + t;
-
-                if (GeometryUtility.PolygonContains( point, in p ))
-                {
-                    data[w * y + x] = c;
-                } else
-                {
-                    data[w * y + x] = Color.Transparent;
-                }
-            }
-        }
-        newTexture.SetData( data );
-        //using (FileStream fs = File.Create( $"poly{i}.png" ))
-        //{
-        //    newTexture.SaveAsPng( fs, newTexture.Width, newTexture.Height );
-        //    System.Diagnostics.Debug.WriteLine( fs.Name );
-        //}
-
-        return newTexture;
-    }
-
-
-    private void SplinterFromTop()
+    private void SplinterFromTop( Vector2 hitPosition )
     {
         Debug.WriteLine( "Splinter from top" );
-        Splinter();
+
+        Rect totalRect = TransformRect;
+        
+        var seedPointRect = new Rect(totalRect.TopLeft.X,totalRect.TopLeft.Y,totalRect.BottomRight.X,totalRect.Center.Y);
+
+        Splinter( seedPointRect, hitPosition );
     }
 
-    private void SplinterFromRight()
+    private void SplinterFromRight( Vector2 hitPosition )
     {
         Debug.WriteLine( "Spliter from right" );
-        Splinter();
+
+        Rect totalRect = TransformRect;
+
+        var seedPointRect = new Rect(totalRect.Center.X,totalRect.TopLeft.Y,totalRect.BottomRight.X,totalRect.BottomRight.Y);
+
+        Splinter( seedPointRect, hitPosition );
     }
 
-    private void SplinterFromLeft()
+    private void SplinterFromLeft( Vector2 hitPosition )
     {
         Debug.WriteLine( "Splinter from left" );
-        Splinter();
+
+        Rect totalRect = TransformRect;
+
+        var seedPointRect = new Rect(totalRect.TopLeft.X,totalRect.TopLeft.Y,totalRect.Center.X,totalRect.BottomRight.Y);
+
+        Splinter(seedPointRect, hitPosition );
     }
 
-    private void SplinterFromBottom()
+    private void SplinterFromBottom( Vector2 hitPosition )
     {
         Debug.WriteLine( "Splinter from bottom" );
-        Splinter();
+
+        Rect totalRect = TransformRect;
+
+        var seedPointRect = new Rect(totalRect.TopLeft.X,totalRect.Center.Y,totalRect.BottomRight.X,totalRect.BottomRight.Y);
+
+        Splinter(seedPointRect, hitPosition );
     }
 
     public override void OnDestroy()
