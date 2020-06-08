@@ -10,7 +10,7 @@ using Util.CustomDebug;
 
 public class TestTileMap : DrawableTileMap<WhiteTile>
 { 
-    public TestTileMap( Vector2 position,int size, GameObject obj ) : base( size, size, AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ).Bounds.Size.ToVector2(), (SortingLayer)0, obj)
+    public TestTileMap( Vector2 position,int size, GameObject obj ) : base( size, size, AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ).Bounds.Size.ToVector2(), SortingLayer.Background, obj)
     {
         Transform.Position = position;        
     }

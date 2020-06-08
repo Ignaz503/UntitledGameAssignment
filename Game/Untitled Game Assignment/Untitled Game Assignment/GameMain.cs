@@ -14,6 +14,7 @@ using Util.AssetManagment;
 using GeoUtil.Polygons;
 using UntitledGameAssignment.Core.GameObjects;
 using Util.SortingLayers;
+using Loyc.Geometry;
 
 namespace UntitledGameAssignment
 {
@@ -111,11 +112,9 @@ namespace UntitledGameAssignment
 
             var player = LoadPlayers();
 
-            //LoadTestGrid();
+            LoadTestGrid();
 
-            //LoadTestPolygon();
-
-            LoadTestPathFollow();
+            //LoadTestPathFollow();
 
             SetupCamera(player);
 
@@ -170,7 +169,9 @@ namespace UntitledGameAssignment
             p2.AddComponent( (obj) => new RigidBody2D(obj, 1.5f));
             p2.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities) );
 
-            ////temp, will move this
+            AddShieldToObject( p2, 1f, 1f, 4);
+
+            //////temp, will move this
             //var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
             //spike.AddComponent( ( obj ) => new GravPull( obj, tankplayer, mass: 0.5f, effectiveRadius: 300.0f, rotate: true ) );
 
@@ -191,25 +192,26 @@ namespace UntitledGameAssignment
             return player;
         }
 
-        void LoadTestPolygon()
+        private void AddShieldToObject( GameObject @object,float speed,float dir, int recursion)
         {
-            var pol = new TestPolygon(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), new Polygon(new Vector2[]
-                                {
-                                    new Vector2(-.5f,-.5f),
-                                    new Vector2(-.5f,.5f),
-                                    new Vector2(.5f,.5f)
-                                    ,new Vector2(.5f,-.5f)
-                                }));
 
-            var pol1 = new TestPolygon(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2() + Vector2.UnitX * 50f), new Polygon(new Vector2[]
-                                {
-                                    new Vector2(0.6f,1f),
-                                    new Vector2(0,0.8f),
-                                    new Vector2(0.4f,0),
-                                    new Vector2(0.8f,0.6f),
-                                    new Vector2(1f,0f),
-                                    new Vector2(1f,0.8f)
-                                }));
+            if (recursion == 0)
+                return;
+
+            recursion--;
+            var motor = new GameObject();
+            motor.Transform.Parent = @object.Transform;
+            motor.Transform.LocalPosition = Vector2.Zero;
+
+            motor.AddComponent( j => new Rotator( j, speed: speed, direction:dir) );
+
+            var shield = new GameObject();
+
+            shield.Transform.Parent = motor.Transform;
+            shield.Transform.LocalPosition = new Vector2( 0f, 40f );
+            shield.Transform.Scale = new Vector2( 0.75f, 0.75f );
+            var ren =shield.AddComponent(j=> new SpriteRenderer( "Sprites/shield", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+            AddShieldToObject( shield, speed*2f, -dir, recursion);
         }
 
         private void LoadTestGrid()

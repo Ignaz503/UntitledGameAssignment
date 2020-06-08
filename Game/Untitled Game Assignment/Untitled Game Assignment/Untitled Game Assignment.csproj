@@ -72,6 +72,9 @@
     <Compile Include="Content\Objects\Player\PlayerComponents\ShootScript.cs" />
     <Compile Include="Content\Objects\Player\PlayerComponents\SpriteFlicker.cs" />
     <Compile Include="Content\Objects\Player\PlayerComponents\VelocityBasedRotationController.cs" />
+    <Compile Include="Content\Objects\Player\Rotator.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Content\Objects\Player\TempPlayer.cs" />
     <Compile Include="Content\Objects\TestPolygon\TestPolygon.cs" />
     <Compile Include="Content\Objects\TileMap\AStarVisualize.cs" />

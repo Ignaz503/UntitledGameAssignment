@@ -12,6 +12,50 @@ namespace Util.Rendering
 {
     public partial class SortedBatchRenderer
     {
+        class DrawCallQueue 
+        {
+            PriorityQueue<IDrawCall> backgroundQueue;
+            PriorityQueue<IDrawCall> entityQueue;
+            PriorityQueue<IDrawCall> uiQueue;
+
+            public int Count => backgroundQueue.Count + entityQueue.Count + uiQueue.Count;
+
+
+            private DrawCallQueue() 
+            {
+                backgroundQueue = new PriorityQueue<IDrawCall>();
+                entityQueue = new PriorityQueue<IDrawCall>();
+                uiQueue = new PriorityQueue<IDrawCall>();
+            }
+
+            public void Enqueue( IDrawCall toEnqueue ) 
+            {
+                if (toEnqueue.Layer < SortingLayer.Entities)
+                    backgroundQueue.Enqueue( toEnqueue );
+                else if (toEnqueue.Layer < SortingLayer.UI)
+                    entityQueue.Enqueue( toEnqueue );
+                else
+                    uiQueue.Enqueue( toEnqueue );
+            }
+
+            public IDrawCall Dequeue() 
+            {
+                if (backgroundQueue.Count > 0)
+                    return backgroundQueue.Dequeue();
+                if (entityQueue.Count > 0)
+                    return entityQueue.Dequeue();
+                if (uiQueue.Count > 0)
+                    return uiQueue.Dequeue();
+                return null;
+            }
+
+
+            public static DrawCallQueue Create() 
+            {
+                return new DrawCallQueue();
+            }
+        }
+
         static SortedBatchRenderer instance;
 
         /// <summary>
@@ -28,7 +72,7 @@ namespace Util.Rendering
         /// </summary>
         public static UnsortedBatchRenderer.Settings CurrentSettings => instance.currentSettings;
 
-        PriorityQueue<IDrawCall> drawCallQueue;
+        DrawCallQueue drawCallQueue;
 
         bool batchingIsStarted;
 
@@ -53,7 +97,7 @@ namespace Util.Rendering
             batch = b;
             //todo whatever is neceserary as things come up
             currentSettings = settings;
-            drawCallQueue = new PriorityQueue<IDrawCall>();
+            drawCallQueue = DrawCallQueue.Create();
         }
         #endregion
 
