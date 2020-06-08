@@ -21,7 +21,7 @@ public class Bullet : GameObject
         rot = (VectorMath.Angle(direction.X, direction.Y) + 90.0f) / 180.0f * (float)Math.PI;
         Transform.Rotation = rot;
 
-        //Debug.Log(direction.X + ", " + direction.Y + ": " + rot);
+        AddComponent((obj) => new VelocityBasedRotationController(obj, Transform) );
 
         SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/bullet", Color.White, 1, obj));
 

@@ -155,7 +155,7 @@ namespace UntitledGameAssignment
             player.AddComponent( ( obj ) => new ShootScript( obj, 4.0f ) );
             player.AddComponent( ( obj ) => new RigidBody2D(obj, 50.0f) );
 
-            player.AddComponent( ( obj ) => new VectorField(obj) );
+            VectorField swirl = new VectorField(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()) - new Vector2(10.0f, 10.0f));
 
             List<SortingLayer> neglectSelf = new List<SortingLayer>();
             neglectSelf.Add(SortingLayer.Entities + 1);

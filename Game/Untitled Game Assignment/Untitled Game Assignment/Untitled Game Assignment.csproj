@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="Content\Objects\DestuctableBox\Components\Destructable.cs" />
     <Compile Include="Content\Objects\DestuctableBox\DestructableBox.cs" />
+    <Compile Include="Content\Objects\Field\RectField.cs" />
+    <Compile Include="Content\Objects\Field\ConcentricField.cs" />
     <Compile Include="Content\Objects\Field\VectorField.cs" />
     <Compile Include="Content\Objects\Items\Bullet.cs" />
     <Compile Include="Content\Objects\Path\Path.cs" />

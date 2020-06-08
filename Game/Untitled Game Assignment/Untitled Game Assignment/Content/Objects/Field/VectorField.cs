@@ -1,48 +1,23 @@
-﻿using Util.Input;
-using Util.FrameTimeInfo;
+﻿using UntitledGameAssignment.Core.GameObjects;
 using UntitledGameAssignment.Core.Components;
-using UntitledGameAssignment.Core.GameObjects;
 using Microsoft.Xna.Framework;
-using System;
+using UntitledGameAssignment;
+using Util.Input;
 using Microsoft.Xna.Framework.Input;
 using Util.CustomDebug;
+using System;
+using Util.CustomMath;
+using Util.SortingLayers;
 
-public class VectorField : Component, IUpdate
+public class VectorField : GameObject
 {
-    Vector2 Pos;
-    RigidBody2D Rb;
 
-    public VectorField( GameObject obj) : base( obj )
+    public VectorField( Vector2 position )
     {
-        Rb = this.GameObject.GetComponent<RigidBody2D>();
-        if (Rb == null)
-        {
-            this.Destroy();
-        }
+        Transform.Position = position;
+
+        SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/swirl", Color.White, SortingLayer.EntitesSubLayer(1), obj));
+
+        AddComponent((obj) => new ConcentricField(obj, new Vector2(0.0f, 0.0f), 10.0f, 200.0f));
     }
-
-    public override void OnDestroy()
-    {}
-
-    public void Update()
-    {
-        Pos = Transform.Position;
-        EnactForce();
-    }
-
-    Vector2 CalcField()
-    {
-        Vector2 Force = new Vector2(-Pos.Y, Pos.X);
-        Force.Normalize();
-        
-        return Force;
-    }
-
-    void EnactForce()
-    {
-        Debug.Log("P: " + Pos + ", F: " + CalcField());
-        Rb.AddImpulse(CalcField(), 0.5f);
-    }
-
 }
-
