@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
@@ -36,6 +37,7 @@ public static class Shatter
         {
             var poly = polygons[i];
             var newTexture = new Texture2D(GameMain.Instance.GraphicsDevice,textureSize.X,textureSize.Y);
+
             float tDir = (float)rng.NextDouble();
             float tForce = (float)rng.NextDouble();
             ThreadedDataRequestor.Instance.RequestData(()=> GenerateTexture(poly,textureSize,newTexture,originalTexture.GetPixels(),bounds),(t)=>MakeGameobject(t,positon,hitPosition,tDir,tForce));
@@ -48,29 +50,27 @@ public static class Shatter
         int h = textureSize.Y-1;
         Color[] data = new Color[textureSize.X*textureSize.Y];
 
-        for (int x = 0; x <= w; x++)
+        for (int i = 0; i < data.Length; i++)
         {
-            for (int y = 0; y <= h; y++)
+            int x = i % textureSize.X;
+            int y = i / textureSize.Y;
+
+            float tx = (float)x/(float)w;
+            float ty = (float)y/(float)h;
+
+
+            float xOffset = r.Size.X * tx;
+            float yOffset = r.Size.Y * ty;
+
+            var pointToCompare = r.TopLeft + new Vector2(xOffset, yOffset);
+
+            if (GeoUtil.GeometryUtility.PolygonContains( pointToCompare, in p ))
             {
-
-                float tx = (float)x/(float)w;
-                float ty = (float)y/(float)h;
-
-
-                float xOffset = r.Size.X * tx;
-                float yOffset = r.Size.Y * ty;
-
-                var pointToCompare = r.TopLeft + new Vector2(xOffset, yOffset);
-
-                if (GeoUtil.GeometryUtility.PolygonContains( pointToCompare, in p ))
-                {
-                    data[w * y + x] = oldTexture.GetPixel( x, y, textureSize.X );
-                } else
-                {
-                    data[w * y + x] = Color.Transparent;
-                }
+                data[i] = oldTexture.GetPixel( x, y, textureSize.X );
+            } else
+            {
+                data[i] = Color.Transparent;
             }
-
         }
         //Debug.WriteLine( builder.ToString() );
         newTexture.SetData( data );
