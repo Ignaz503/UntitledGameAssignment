@@ -15,6 +15,7 @@ using GeoUtil.Polygons;
 using UntitledGameAssignment.Core.GameObjects;
 using Util.SortingLayers;
 using Loyc.Geometry;
+using Util.CustomMath;
 
 namespace UntitledGameAssignment
 {
@@ -210,14 +211,24 @@ namespace UntitledGameAssignment
             GameObject obj = new GameObject();
             var t = obj.AddComponent( ( j ) => new TestTileMap( Camera.Active.Origin - new Vector2(40,40)*.5f * 50f,40, j ) );
             var at = AStarTileMap.CreateAStarMap( t );
-            obj.AddComponent( j => new AStarVisualize( t, at, j ) );
         }
 
         void LoadTestPathFollow()
         {
             var obj = new GameObject();
             obj.Transform.Position = Camera.Active.ScreenToWorld( Vector2.Zero );
-            obj.AddComponent( ( j ) => new PathCreator( AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ), .5f, j ) );
+
+            var pF = new GameObject();
+
+            pF.Transform.Position = Camera.Active.ScreenToWorld( new Vector2( 500, 80 ) );
+
+            pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/heart", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+
+            var pathFollower = pF.AddComponent( ( j ) => new PathFollower(0.005f, j, 0.5f ) );
+
+            //AddObjectsToEitherSide(obj, recursion: 2 );
+
+            obj.AddComponent( ( j ) => new PathCreator(pathFollower,AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ), .5f, j ) );
         }
 
         /// <summary>

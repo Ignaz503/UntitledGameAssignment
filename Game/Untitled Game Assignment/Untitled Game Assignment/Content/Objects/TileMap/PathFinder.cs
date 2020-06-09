@@ -132,7 +132,7 @@ public static class PathFinder
         var res = path.ToArray();
         Array.Reverse( res );
 
-        return new Path(res, false );
+        return new Path(res );
     }
 
     static Vector2 GetWorldPos( AStarTileMap map, AStarTile t )
@@ -156,7 +156,7 @@ public static class PathFinder
         var res = path.ToArray();
         Array.Reverse( res );
 
-        return new Path(res, false );
+        return new Path(res );
     }
 }
 

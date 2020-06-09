@@ -28,6 +28,9 @@ namespace UntitledGameAssignment.Core
             }
             set
             {
+                //System.Diagnostics.Debug.WriteLine( $"setting position to {value}" );
+                if (value.X is float.NaN)
+                        System.Diagnostics.Debug.WriteLine( $"setting position to {value}" );
                 if (HasParent)
                 {
                     // similar to invert point function but with no translation for the this tansform step
@@ -36,10 +39,12 @@ namespace UntitledGameAssignment.Core
                     //TODO maybe switch
                     TraverseToRoot( ( pT ) => trans = pT.inverseTransform * trans);
                     LocalPosition = Vector2.Transform( value, trans );
+
                 } else
                 {
                     LocalPosition = value;
                 }
+
             }
         }
 
@@ -439,6 +444,11 @@ namespace UntitledGameAssignment.Core
         internal void TraverseChildren( Action<Transform> actionForChild, bool childrenTraversalRecursion= true, bool checkIfEnabledForRecursion = true ) 
         {
 
+            if (this != Scene.Current.Root && !GameObject.IsEnabled)
+            {
+                return;
+            }
+
             if (actionForChild == null || children == null)
                 return;
             for (int i = 0; i < children.Count; i++)
@@ -460,7 +470,7 @@ namespace UntitledGameAssignment.Core
                 }
             }
 
-            //TODO: move this maybe, although it does work here, just doesnt fit in this method
+            ////TODO: move this maybe, although it does work here, just doesnt fit in this method
             this.Position += this.Velocity;
             //this.Velocity -= this.Velocity * 0.99f;
             this.Velocity *= 0.75f;

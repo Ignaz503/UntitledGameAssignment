@@ -77,7 +77,6 @@
     </Compile>
     <Compile Include="Content\Objects\Player\TempPlayer.cs" />
     <Compile Include="Content\Objects\TestPolygon\TestPolygon.cs" />
-    <Compile Include="Content\Objects\TileMap\AStarVisualize.cs" />
     <Compile Include="Content\Objects\TileMap\PathFinder.cs" />
     <Compile Include="Content\Objects\TileMap\Tile\AStarTile.cs" />
     <Compile Include="Content\Objects\TileMap\Tile\AStarTileMap.cs" />

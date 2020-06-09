@@ -1,11 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 using UntitledGameAssignment.Core.Components;
 using UntitledGameAssignment.Core.GameObjects;
-using Util.CustomDebug;
 using Util.CustomMath;
 using Util.FrameTimeInfo;
+using Util.Input;
 
 public class PathFollower : Component, IFixedUpdate
 {
@@ -16,7 +18,7 @@ public class PathFollower : Component, IFixedUpdate
     public Path PathToFollow 
     {
         get { return pathToFollow; }
-        set { pathToFollow = value; Reset(); }
+        set { pathToFollow = value; Recalc(); }
     }
 
     float t = 0f;
@@ -27,13 +29,11 @@ public class PathFollower : Component, IFixedUpdate
 
     Dictionary<float, float> arcLUT;
 
-    public PathFollower( Path simplePath, float sampleRate, GameObject obj, float speed, int startIndx = 0  ) : base( obj )
+    public PathFollower( float sampleRate, GameObject obj, float speed ) : base( obj )
     {
-        pathToFollow = simplePath ?? throw new System.ArgumentNullException( nameof( simplePath ) );
         t = 0f;
         this.sampleRate = sampleRate;
         this.Speed = speed;
-        BuildArcLUT();
     }
 
     private void BuildArcLUT()
@@ -64,36 +64,39 @@ public class PathFollower : Component, IFixedUpdate
             item.value /= total;
             arcLUT.Add( item.key, item.value );
         }
-
     }
 
     public void FixedUpdate()
     {
-        FollowPathArc( pathToFollow );
+        if(pathToFollow != null)
+            FollowPathArc( pathToFollow );
     }
 
     private void FollowPathArc( Path p )
     {
-        t += TimeInfo.FixedDeltaTime*Speed;
+        t += Speed*sampleRate;
 
         if (t >= 1f)
         {
-            t = 0f;
+            t = 1f;
         }
 
         float arc = FindArcStep(t);
 
 
         var newPos = pathToFollow.FollowPathCatmullRom(arc);
+
+
         var dir = (newPos-Transform.Position);
         dir.Normalize();
 
         Transform.Rotation = 90f*Mathf.Deg2Rad + (float)Math.Atan2(dir.Y,dir.X);
 
         //var newPos = Vector2.Lerp(p.Current,p.Next,t);
-
+        Debug.WriteLine( nameof(PathFollower) + $"t {t}  arc {arc} " + newPos.ToString() );
         Transform.Position = newPos;
     }
+
 
     private float FindArcStep( float t )
     {
@@ -149,18 +152,10 @@ public class PathFollower : Component, IFixedUpdate
         OnDestroyed?.Invoke();
     }
 
-    public void Reset()
+    public void Recalc()
     {
-        if (pathToFollow != null)
-        {
-            SetEnabled( true );
-            t = 0f;
-            if (pathToFollow != null)
-                pathToFollow.Reset();
-        } else
-        {
-            SetEnabled( false );
-        }
+        t = 0f;
+        BuildArcLUT();
     }
 
     struct ArcPair 
