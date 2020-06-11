@@ -83,25 +83,48 @@ public class BoxCollider : Component, IUpdate
             //Add impulses if applicable
             if (opponent != null && self != null)
             {
-                Vector2 newVelocity = Transform.Velocity;
                 if ((Transform.Velocity.X > 0 && this.IsTouchingLeft(query)) ||
                     (Transform.Velocity.X < 0 && this.IsTouchingRight(query)) ||
                     (Transform.Velocity.Y > 0 && this.IsTouchingTop(query)) ||
                     (Transform.Velocity.Y < 0 && this.IsTouchingBottom(query)))
                 {
-                    //Debug.Log("adding impulse of " + Transform.Velocity + " to " + collider.Name);
                     // Add existing movement and impulse to colliding RigidBody
-                    //Vector2 direction = Transform.Velocity;
-                    Vector2 opp_direction = query.GameObject.Transform.Velocity - ((2.0f * self.Mass) / (opponent.Mass + self.Mass)) * (query.GameObject.Transform.Velocity - Transform.Velocity);
-                    opp_direction.Normalize();
-                    opponent.AddImpulse(opp_direction, self.Energy());
+                    self.Bounce(opponent);
+                    opponent.Bounce(self);
 
-                    /*Vector2 self_direction = Transform.Velocity - ((2.0f * opponent.Mass) / (opponent.Mass + self.Mass)) * (Transform.Velocity - query.GameObject.Transform.Velocity);
-                    self_direction.Normalize();
-                    self.AddImpulse(self_direction, opponent.Energy());*/
+                    query.Collisions.Remove(GameObject);
 
                     //Slow own movement if have RigidBody2D and opponent bigger
                     CollisionMultiplier = Math.Min(1.0f, self.Mass / opponent.Mass);
+                }
+
+                // Add angular momentum to colliding RigidBody
+                if (Transform.Velocity.X > 0 && this.IsTouchingLeft(query))
+                {
+                    Vector2 L = new Vector2(BoundingBox.Left, BoundingBox.Center.Y);
+                    Debug.Log(Transform.Position + " L " + L + " C. " + BoundingBox.Center);
+
+                    opponent.AddTorque(L, self.Impulse, 1.0f);
+                }
+                if (Transform.Velocity.X < 0 && this.IsTouchingRight(query))
+                {
+                    Vector2 R = new Vector2(BoundingBox.Right, BoundingBox.Center.Y);
+                    Debug.Log(Transform.Position + " R " + R);
+
+                    opponent.AddTorque(R, self.Impulse, 1.0f);
+                }
+                if (Transform.Velocity.Y > 0 && this.IsTouchingTop(query))
+                {
+                    Vector2 T = new Vector2(BoundingBox.Center.X, BoundingBox.Top);
+                    Debug.Log(Transform.Position + " T " + T);
+
+                    opponent.AddTorque(T, self.Impulse, 1.0f);
+                }
+                if (Transform.Velocity.Y < 0 && this.IsTouchingBottom(query))
+                {
+                    Vector2 B = new Vector2(BoundingBox.Center.X, BoundingBox.Bottom);
+
+                    opponent.AddTorque(B, self.Impulse, 1.0f);
                 }
             }
 

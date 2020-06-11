@@ -26,13 +26,16 @@ namespace Util.SortingLayers
 
         public static SortingLayer Background => 0;
         public static SortingLayer Entities => 10;
-        public static SortingLayer UI => 20;
+        public static SortingLayer Particles => 20;
+        public static SortingLayer UI => 30;
 
         public static SortingLayer EntitesSubLayer( int subLayer ) => Entities + subLayer;
 
         public static SortingLayer BackgroundSubLayer( int subLayer ) => Background + subLayer;
 
-        public static SortingLayer UISubLayer( int subLayer ) => UI + subLayer;
+        public static SortingLayer ParticlesSubLayer(int subLayer) => Particles + subLayer;
+
+        public static SortingLayer UISubLayer(int subLayer) => UI + subLayer;
         /// <summary>
         /// the value of this layer
         /// </summary>

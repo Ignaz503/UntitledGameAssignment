@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Util.CustomDebug;
 using System.Collections.Generic;
 using UntitledGameAssignment.Core.SceneGraph;
+using Util.SortingLayers;
 
 public class ConcentricField: Component, IUpdate
 {
@@ -30,7 +31,8 @@ public class ConcentricField: Component, IUpdate
         {
             if ((obj.Transform.Position - Transform.Position).Length() < EffectiveRadius && obj.GetComponent<RigidBody2D>() != null)
             {
-                EnactForce(obj);
+                if (obj.GetComponent<RigidBody2D>().Layer == SortingLayer.Particles)
+                    EnactForce(obj);
             }
         }
     }

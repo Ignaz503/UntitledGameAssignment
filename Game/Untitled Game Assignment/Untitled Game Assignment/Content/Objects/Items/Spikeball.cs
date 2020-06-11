@@ -19,7 +19,7 @@ public class Spikeball : GameObject
         SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/spikeball", Color.White, SortingLayer.EntitesSubLayer(1), obj));
 
         AddComponent((obj) => new BoxCollider(spriteRen, obj, SortingLayer.Entities, false));
-        AddComponent((obj) => new RigidBody2D(obj, 1.2f));
+        AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
 
     }
 }

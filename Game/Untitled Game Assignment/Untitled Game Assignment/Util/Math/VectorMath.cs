@@ -110,7 +110,7 @@ namespace Util.CustomMath
             else if (y < 0.0f) // quadrant 4
                 ret = 270.0f + (90.0f + ret);
 
-            return ret;
+            return ret % 360;
         }
 
         /// <summary>

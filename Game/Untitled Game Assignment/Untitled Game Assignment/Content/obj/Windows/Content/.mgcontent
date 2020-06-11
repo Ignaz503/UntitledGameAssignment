@@ -9,6 +9,7 @@
     <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/bullet.png</File>
     <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/cursor.png</File>
     <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/heart.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerleg.png</File>
     <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerlegl.png</File>
     <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerlegr.png</File>
     <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playershoulders.png</File>
@@ -19,6 +20,7 @@
     <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/WhiteSquare.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -33,7 +33,8 @@ public class GravPull : Component, IUpdate
 
         if (Rb == null || TargetRb == null)
         {
-            this.Destroy();
+            Debug.Log("GravPull without RigidBody");
+            this.Disable();
         }
     }
      

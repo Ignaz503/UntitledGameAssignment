@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Microsoft.Xna.Framework.Input;
 using Util.CustomDebug;
+using System.Security.Cryptography;
 
 public class MovementController : Component, IUpdate
 {
@@ -54,7 +55,15 @@ public class MovementController : Component, IUpdate
             desiredDir += new Vector2( 1, 0 );
         }
 
-        Transform.Velocity += desiredDir * walkSpeed * TimeInfo.DeltaTime;
+        if (desiredDir != Vector2.Zero)
+        {
+            desiredDir.Normalize();
+        }
+
+        if (GameObject.GetComponent<RigidBody2D>() != null)
+            GameObject.GetComponent<RigidBody2D>().AddImpulse(desiredDir, walkSpeed);
+        else
+            Transform.Velocity += desiredDir * walkSpeed * 50.0f * TimeInfo.DeltaTime;
     }
 }
 

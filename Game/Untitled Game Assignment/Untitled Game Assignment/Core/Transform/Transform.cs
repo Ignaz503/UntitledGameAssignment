@@ -7,6 +7,7 @@ using UntitledGameAssignment.Core.GameObjects;
 using UntitledGameAssignment.Core.SceneGraph;
 using Util.CustomDebug;
 using UntitledGameAssignment.Core.Components;
+using Loyc.Geometry;
 
 namespace UntitledGameAssignment.Core
 {
@@ -436,8 +437,10 @@ namespace UntitledGameAssignment.Core
         /// <param name="actionForChild">the action taken with this child transform</param>
         /// <param name="childrenTraversalRecursion">if true traverse children called on every child, if false not</param>
         /// <param name="checkIfEnabledForRecursion">if true only invoked if child object is enabled, if false invoked no matter the object active state</param>
-        internal void TraverseChildren( Action<Transform> actionForChild, bool childrenTraversalRecursion= true, bool checkIfEnabledForRecursion = true ) 
+        internal void TraverseChildren( Action<Transform> actionForChild, bool childrenTraversalRecursion= true, bool checkIfEnabledForRecursion = true )
         {
+            //TODO: move this maybe, although it does work here, just doesnt fit in this method
+            this.Position += this.Velocity;
 
             if (actionForChild == null || children == null)
                 return;
@@ -460,10 +463,8 @@ namespace UntitledGameAssignment.Core
                 }
             }
 
-            //TODO: move this maybe, although it does work here, just doesnt fit in this method
-            this.Position += this.Velocity;
-            //this.Velocity -= this.Velocity * 0.99f;
-            this.Velocity *= 0.75f;
+            //this.Velocity -= this.Velocity * 0.75f;
+            this.Velocity *= 0.001f;
         }
 
         /// <summary>

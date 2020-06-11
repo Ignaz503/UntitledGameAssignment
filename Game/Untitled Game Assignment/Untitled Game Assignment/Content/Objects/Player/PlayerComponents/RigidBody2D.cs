@@ -7,19 +7,30 @@ using UntitledGameAssignment.Core.Components;
 using UntitledGameAssignment.Core.GameObjects;
 using UntitledGameAssignment.Core.SceneGraph;
 using Util.CustomDebug;
+using Util.CustomMath;
 using Util.Input;
+using Util.SortingLayers;
 
 public class RigidBody2D : Component, IUpdate
 {
     // The higher the mass, the faster the impulse decay
     public float Mass = 10.0f;
-    
+    public float Drag;
+    public SortingLayer Layer;
+
+    //linear momentum, rate of velocity change
     public Vector2 Impulse;
 
-    public RigidBody2D( GameObject obj, float mass ) : base( obj )
+    //angular velocity, rate of rotation change
+    public float Torque;
+
+    public RigidBody2D( GameObject obj, float mass, SortingLayer layer, float drag = 0.9f ) : base( obj )
     {
+        Layer = layer;
+        Drag = drag;
         Mass = Math.Max(mass, 1.0f);
         Impulse = Vector2.Zero;
+        Torque = 0.0f;
     }
 
     public override void OnDestroy()
@@ -29,7 +40,10 @@ public class RigidBody2D : Component, IUpdate
     {
         Transform.Velocity += Impulse;
         // Impulse decay
-        Impulse *= (1.0f / Mass) * 0.999f;
+        Impulse *= (Drag / Mass);
+
+        Transform.Rotation = (Transform.Rotation + Torque) % 180;
+        Torque *= (Drag / Mass);
     }
 
     public void AddImpulse(Vector2 direction, float force)
@@ -37,10 +51,25 @@ public class RigidBody2D : Component, IUpdate
         Impulse += direction * force;
     }
 
-    public float Energy()
+    public void AddTorque(Vector2 position, Vector2 direction, float force)
     {
-        float imp = Transform.Velocity.Length() * Transform.Velocity.Length() * Mass; //E=mc^2
-        return imp * 0.75f; //scale back
+        Vector2 len = position - GameObject.GetComponent<BoxCollider>().BoundingBox.Center.ToVector2();
+        Vector2 dir = len + direction;
+        float diff = (VectorMath.Angle(dir.X, dir.Y) + 90.0f) / 180.0f * (float)Math.PI;
+        //float diff = (float)Math.Atan((double)(direction.Length() / len.Length()));
+        Torque += diff * Mass * force;
+
+        Debug.Log(Transform.Rotation + ": adding torque of " + diff + " to " + GameObject.Name);
+    }
+
+    public void Bounce(RigidBody2D opponent)
+    {
+        Vector2 part1 = Impulse - ((2.0f * opponent.Mass) / (opponent.Mass + Mass)) * (Impulse - opponent.Impulse);
+        Vector2 n = (Transform.Position - opponent.Transform.Position) / (Transform.Position - opponent.Transform.Position).Length();
+        AddImpulse(part1 * n * n, 1.0f);
+
+        Debug.Log("adding impulse of " + part1 * n * n + " to " + GameObject.Name);
+
     }
 }
 

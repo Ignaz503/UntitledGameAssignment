@@ -143,19 +143,21 @@ namespace UntitledGameAssignment
 
         private GameObject LoadPlayers()
         {
-            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), (obj) => new MovementController(obj, walkSpeed: 10f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
+            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), (obj) => new MovementController(obj, walkSpeed: 5.0f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
             
             TankTreads treads = new TankTreads(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), SortingLayer.Entities, player, TankTreads.tint.white, "Sprites/playerlegr");
             List<String> sprites = new List<string>();
             sprites.Add("Sprites/playerlegr");
+            sprites.Add("Sprites/playerleg");
             sprites.Add("Sprites/playerlegl");
-            treads.AddComponent( (obj) => new SpriteFlicker(obj, treads.SpriteRen, sprites, true, 0.5f));
+            sprites.Add("Sprites/playerleg");
+            treads.AddComponent( (obj) => new SpriteFlicker(obj, treads.SpriteRen, sprites, true, 0.2f));
 
             player.AddComponent( ( obj ) => new MouseLocationBasedRotationController( obj ) );
-            player.AddComponent( ( obj ) => new ShootScript( obj, 4.0f ) );
-            player.AddComponent( ( obj ) => new RigidBody2D(obj, 50.0f) );
+            player.AddComponent( ( obj ) => new ShootScript( obj, 15.0f ) );
+            player.AddComponent( ( obj ) => new RigidBody2D( obj, 50.0f, SortingLayer.Entities ) );
 
-            VectorField swirl = new VectorField(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()) - new Vector2(10.0f, 10.0f));
+            //VectorField swirl = new VectorField(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()) - new Vector2(10.0f, 10.0f));
 
             List<SortingLayer> neglectSelf = new List<SortingLayer>();
             neglectSelf.Add(SortingLayer.Entities + 1);
@@ -170,23 +172,23 @@ namespace UntitledGameAssignment
                 Keys.Y,
                 Keys.X);
 
-            p2.AddComponent( (obj) => new RigidBody2D(obj, 1.5f));
-            p2.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities) );
+            p2.AddComponent( (obj) => new RigidBody2D( obj, 1.5f, SortingLayer.Entities ) );
+            p2.AddComponent( (obj) => new BoxCollider( player.SpriteRen, obj, SortingLayer.Entities ) );
 
-            var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
+            /*var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
             spike.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 300.0f, rotate: true ) );
 
             var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
-            red_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
-            
-            var blue_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(500, 80)), heal: player, Color.Blue);
+            red_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );*/
+
+            /*var blue_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(500, 80)), heal: player, Color.Blue);
             blue_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
             
             var green_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(200, 300)), heal: player, Color.Green);
             green_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
 
             //var destructableBox = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/WhiteSquare"),Camera.Active.ScreenToWorld(new Vector2(500, 300)),player);
-
+            */
             return player;
         }
 
