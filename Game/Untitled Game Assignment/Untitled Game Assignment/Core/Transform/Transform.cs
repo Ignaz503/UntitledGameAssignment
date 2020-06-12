@@ -50,6 +50,11 @@ namespace UntitledGameAssignment.Core
         public Vector2 Velocity { get; set; }
 
         /// <summary>
+        /// Velocity, relative position at next update
+        /// </summary>
+        public float RotationVelocity { get; set; }
+
+        /// <summary>
         /// local translation matrix
         /// </summary>
         Matrix localTranslationMatrix;
@@ -441,6 +446,8 @@ namespace UntitledGameAssignment.Core
         {
             //TODO: move this maybe, although it does work here, just doesnt fit in this method
             this.Position += this.Velocity;
+            this.Rotation += this.RotationVelocity;
+            this.Rotation = this.Rotation % 8.0f;
 
             if (actionForChild == null || children == null)
                 return;
@@ -464,7 +471,8 @@ namespace UntitledGameAssignment.Core
             }
 
             //this.Velocity -= this.Velocity * 0.75f;
-            this.Velocity *= 0.001f;
+            this.Velocity *= 0.0001f;
+            this.RotationVelocity *= 0.0001f;
         }
 
         /// <summary>

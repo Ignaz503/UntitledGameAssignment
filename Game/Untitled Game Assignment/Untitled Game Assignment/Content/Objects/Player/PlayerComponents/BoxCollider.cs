@@ -106,23 +106,24 @@ public class BoxCollider : Component, IUpdate
 
                     opponent.AddTorque(L, self.Impulse, 1.0f);
                 }
-                if (Transform.Velocity.X < 0 && this.IsTouchingRight(query))
+                else if (Transform.Velocity.X < 0 && this.IsTouchingRight(query))
                 {
                     Vector2 R = new Vector2(BoundingBox.Right, BoundingBox.Center.Y);
                     Debug.Log(Transform.Position + " R " + R);
 
                     opponent.AddTorque(R, self.Impulse, 1.0f);
                 }
-                if (Transform.Velocity.Y > 0 && this.IsTouchingTop(query))
+                else if (Transform.Velocity.Y > 0 && this.IsTouchingTop(query))
                 {
                     Vector2 T = new Vector2(BoundingBox.Center.X, BoundingBox.Top);
                     Debug.Log(Transform.Position + " T " + T);
 
                     opponent.AddTorque(T, self.Impulse, 1.0f);
                 }
-                if (Transform.Velocity.Y < 0 && this.IsTouchingBottom(query))
+                else if (Transform.Velocity.Y < 0 && this.IsTouchingBottom(query))
                 {
                     Vector2 B = new Vector2(BoundingBox.Center.X, BoundingBox.Bottom);
+                    Debug.Log(Transform.Position + " B " + B);
 
                     opponent.AddTorque(B, self.Impulse, 1.0f);
                 }

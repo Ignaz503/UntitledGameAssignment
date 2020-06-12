@@ -175,10 +175,10 @@ namespace UntitledGameAssignment
             p2.AddComponent( (obj) => new RigidBody2D( obj, 1.5f, SortingLayer.Entities ) );
             p2.AddComponent( (obj) => new BoxCollider( player.SpriteRen, obj, SortingLayer.Entities ) );
 
-            /*var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
+            var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
             spike.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 300.0f, rotate: true ) );
 
-            var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
+            /*var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
             red_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );*/
 
             /*var blue_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(500, 80)), heal: player, Color.Blue);

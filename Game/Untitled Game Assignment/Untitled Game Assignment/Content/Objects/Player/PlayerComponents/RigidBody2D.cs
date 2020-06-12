@@ -8,6 +8,7 @@ using UntitledGameAssignment.Core.GameObjects;
 using UntitledGameAssignment.Core.SceneGraph;
 using Util.CustomDebug;
 using Util.CustomMath;
+using Util.FrameTimeInfo;
 using Util.Input;
 using Util.SortingLayers;
 
@@ -42,7 +43,8 @@ public class RigidBody2D : Component, IUpdate
         // Impulse decay
         Impulse *= (Drag / Mass);
 
-        Transform.Rotation = (Transform.Rotation + Torque) % 180;
+        Transform.RotationVelocity += Torque;
+        // Torque decay
         Torque *= (Drag / Mass);
     }
 
@@ -54,12 +56,14 @@ public class RigidBody2D : Component, IUpdate
     public void AddTorque(Vector2 position, Vector2 direction, float force)
     {
         Vector2 len = position - GameObject.GetComponent<BoxCollider>().BoundingBox.Center.ToVector2();
-        Vector2 dir = len + direction;
-        float diff = (VectorMath.Angle(dir.X, dir.Y) + 90.0f) / 180.0f * (float)Math.PI;
+        //float diff = (VectorMath.Angle(dir.X, dir.Y) + 90.0f) / 180.0f * (float)Math.PI;
         //float diff = (float)Math.Atan((double)(direction.Length() / len.Length()));
+        float diff = VectorMath.DiffAngle(len.X, len.Y, direction.X, direction.Y);
+        diff = diff * 4.0f / 180.0f;
+
         Torque += diff * Mass * force;
 
-        Debug.Log(Transform.Rotation + ": adding torque of " + diff + " to " + GameObject.Name);
+        //Debug.Log("hitting at " + len + " with force of " + direction + " yields " + diff);
     }
 
     public void Bounce(RigidBody2D opponent)

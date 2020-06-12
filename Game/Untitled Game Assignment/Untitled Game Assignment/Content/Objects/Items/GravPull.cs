@@ -69,7 +69,7 @@ public class GravPull : Component, IUpdate
         if (Rotate)
         {
             float rot = (VectorMath.Angle(Direction.X, Direction.Y) + 90.0f) / 180.0f * (float)Math.PI;
-            Transform.Rotation = rot;
+            Transform.RotationVelocity += -(Transform.Rotation + rot - 4.0f);
         }
     }
 }
