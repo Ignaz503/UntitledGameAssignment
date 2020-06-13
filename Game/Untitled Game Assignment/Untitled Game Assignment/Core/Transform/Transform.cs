@@ -447,7 +447,6 @@ namespace UntitledGameAssignment.Core
             //TODO: move this maybe, although it does work here, just doesnt fit in this method
             this.Position += this.Velocity;
             this.Rotation += this.RotationVelocity;
-            this.Rotation = this.Rotation % 8.0f;
 
             if (actionForChild == null || children == null)
                 return;

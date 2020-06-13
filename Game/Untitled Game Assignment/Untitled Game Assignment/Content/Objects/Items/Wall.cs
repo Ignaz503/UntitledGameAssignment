@@ -9,17 +9,17 @@ using System;
 using Util.CustomMath;
 using Util.SortingLayers;
 
-public class Spikeball : GameObject
+public class Wall : GameObject
 {
 
-    public Spikeball( Vector2 position )
+    public Wall( Vector2 position, float rotation )
     {
         Transform.Position = position;
+        Transform.Rotation = rotation;
 
-        SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/spikeball", Color.White, SortingLayer.EntitesSubLayer(1), obj));
+        SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/wall", Color.White, SortingLayer.EntitesSubLayer(1), obj));
 
         AddComponent((obj) => new BoxCollider(spriteRen, obj, SortingLayer.Entities));
-        AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
 
     }
 }

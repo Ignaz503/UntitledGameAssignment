@@ -29,10 +29,9 @@ public class ConcentricField: Component, IUpdate
         List<GameObject> objects = Scene.Current.gameObjects;
         foreach (GameObject obj in objects)
         {
-            if ((obj.Transform.Position - Transform.Position).Length() < EffectiveRadius && obj.GetComponent<RigidBody2D>() != null)
+            if ((obj.Transform.Position - Transform.Position).Length() < EffectiveRadius && obj.GetComponent<RigidBody2D>() != null && obj.GetComponent<SpriteRenderer>().Layer == SortingLayer.Particles)
             {
-                if (obj.GetComponent<RigidBody2D>().Layer == SortingLayer.Particles)
-                    EnactForce(obj);
+                EnactForce(obj);
             }
         }
     }

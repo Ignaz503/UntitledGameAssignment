@@ -158,6 +158,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/tank_treads.png
 
+#begin Sprites/wall.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/wall.png
+
 #begin Sprites/WhiteSquare.png
 /importer:TextureImporter
 /processor:TextureProcessor

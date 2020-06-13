@@ -143,9 +143,10 @@ namespace UntitledGameAssignment
 
         private GameObject LoadPlayers()
         {
-            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), (obj) => new MovementController(obj, walkSpeed: 5.0f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
+            Vector2 camcenter = VirtualViewport.Bounds.Center.ToVector2();
+            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(camcenter), (obj) => new MovementController(obj, walkSpeed: 5.0f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
             
-            TankTreads treads = new TankTreads(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), SortingLayer.Entities, player, TankTreads.tint.white, "Sprites/playerlegr");
+            TankTreads treads = new TankTreads(Camera.Active.ScreenToWorld(camcenter), SortingLayer.Entities, player, TankTreads.tint.white, "Sprites/playerlegr");
             List<String> sprites = new List<string>();
             sprites.Add("Sprites/playerlegr");
             sprites.Add("Sprites/playerleg");
@@ -156,27 +157,34 @@ namespace UntitledGameAssignment
             player.AddComponent( ( obj ) => new MouseLocationBasedRotationController( obj ) );
             player.AddComponent( ( obj ) => new ShootScript( obj, 15.0f ) );
             player.AddComponent( ( obj ) => new RigidBody2D( obj, 50.0f, SortingLayer.Entities ) );
+            player.AddComponent( ( obj ) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities + 1 ) );
 
             //VectorField swirl = new VectorField(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()) - new Vector2(10.0f, 10.0f));
 
-            List<SortingLayer> neglectSelf = new List<SortingLayer>();
-            neglectSelf.Add(SortingLayer.Entities + 1);
-            player.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities + 1, true, neglectSelf) );
-
             var p2 = new TempPlayer(
-                Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()+Vector2.One*50f),
+                Camera.Active.ScreenToWorld(camcenter + Vector2.One*50f),
                 null,
                 SortingLayer.EntitesSubLayer(1),
                 TempPlayer.tint.white,
-                "Sprites/playershoulders",
+                "Sprites/tank_gun",
                 Keys.Y,
                 Keys.X);
+            var p2_treads = new TankTreads(p2.Transform.Position, SortingLayer.EntitesSubLayer(1), p2, TankTreads.tint.white, "Sprites/tank_treads");
 
             p2.AddComponent( (obj) => new RigidBody2D( obj, 1.5f, SortingLayer.Entities ) );
             p2.AddComponent( (obj) => new BoxCollider( player.SpriteRen, obj, SortingLayer.Entities ) );
 
             var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
             spike.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 300.0f, rotate: true ) );
+
+            var wall1 = new Wall(camcenter + Vector2.UnitX * -20, (float)Math.PI);
+            wall1.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var wall2 = new Wall(camcenter + Vector2.UnitX * -84, (float)Math.PI * 2);
+            wall2.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var wall3 = new Wall(camcenter + Vector2.UnitX * -20 + Vector2.UnitY * -64, (float)Math.PI);
+            wall3.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var wall4 = new Wall(camcenter + Vector2.UnitX * -84 + Vector2.UnitY * -64, (float)Math.PI * 2);
+            wall4.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
 
             /*var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
             red_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );*/

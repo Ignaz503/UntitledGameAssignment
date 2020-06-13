@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/tank_treads.png</SourceFile>
-  <SourceTime>2020-06-13T12:37:45.3329703+02:00</SourceTime>
-  <DestFile>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/bin/Windows/Content/Sprites/tank_treads.xnb</DestFile>
-  <DestTime>2020-06-13T12:41:37.2563432+02:00</DestTime>
+  <SourceFile>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/wall.png</SourceFile>
+  <SourceTime>2020-06-13T16:54:22.0898903+02:00</SourceTime>
+  <DestFile>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/bin/Windows/Content/Sprites/wall.xnb</DestFile>
+  <DestTime>2020-06-13T16:58:05.9190312+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
