@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Util.CustomMath;
 using UntitledGameAssignment.Core.GameObjects;
 using UntitledGameAssignment.Core.SceneGraph;
-using Util.CustomDebug;
 using UntitledGameAssignment.Core.Components;
+using Util.CustomMath;
 
 namespace UntitledGameAssignment.Core
 {
@@ -28,9 +28,6 @@ namespace UntitledGameAssignment.Core
             }
             set
             {
-                //System.Diagnostics.Debug.WriteLine( $"setting position to {value}" );
-                if (value.X is float.NaN)
-                        System.Diagnostics.Debug.WriteLine( $"setting position to {value}" );
                 if (HasParent)
                 {
                     // similar to invert point function but with no translation for the this tansform step
@@ -370,13 +367,23 @@ namespace UntitledGameAssignment.Core
             //where tn sn pn are the matrices of this transform and the root is t-s-r0
             Matrix trans = transform;
 
-            TraverseToRoot( ( pT ) => trans = trans * pT.transform);
+            //if (GameObject != null && GameObject.Name == nameof( PathFollower ))
+            //{
+            //    Debug.WriteLine($"local rot: {localRotationMatrix}");
+            //    Debug.WriteLine($"local scale: {scaleMatrix}");
+            //    Debug.WriteLine($"local tanslation: {localTranslationMatrix}");
+            //    Debug.WriteLine($"transform :{trans}");
+            //}
+
+            TraverseToRoot( ( pT ) => {
+                    trans = trans * pT.transform;
+            } );
 
             var r = Vector2.Transform( localPoint, trans );
 
             //if (HasParent)
             //    Debug.Log( $"{GameObject.Name} Rotation: {Rotation}" );
-   
+
             return r;
         }
 

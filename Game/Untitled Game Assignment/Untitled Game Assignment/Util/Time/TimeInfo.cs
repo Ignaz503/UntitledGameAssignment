@@ -25,6 +25,9 @@ namespace Util.FrameTimeInfo
             }
         }
 
+
+        public static TimeSpan TotalGameTime => TimeStep.TotalGameTime;
+
         /// <summary>
         /// scales the time (0 pauses game)
         /// </summary>

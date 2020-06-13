@@ -82,7 +82,6 @@ namespace Util.CustomMath
         {
             return v - (float)Math.Truncate( v );
         }
-
     }
 
 }

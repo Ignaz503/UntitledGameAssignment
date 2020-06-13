@@ -132,6 +132,34 @@ namespace Util.CustomMath
             return new Vector2( xRes, yRes );
         }
 
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static float Angle(Vector2 a, Vector2 b, bool normalized=true) 
+        {
+            if (normalized)
+            {
+                return (float)Math.Acos( Vector2.Dot( a, b ) );
+            } else
+            {
+                float dot = Vector2.Dot(a,b);
+                var l1 = a.Length();
+                var l2 = a.Length();
+                return (float)Math.Acos( dot / (l1 * l2) );
+            }
+        }
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static Vector2 Slerp( Vector2 a, Vector2 b, float t )
+        {
+            float angle = Angle(a,b,false);
+
+            float sinOneMinusT = (float)Math.Sin((1-t)*angle);
+            float sinT = (float)Math.Sin((1)*angle);
+            float sin = (float)Math.Sin(angle);
+
+            return (sinOneMinusT/sin) * a + (sinT/sin) * b;
+        }
+
     }
 
     public static class MonoGameVectorExtensions

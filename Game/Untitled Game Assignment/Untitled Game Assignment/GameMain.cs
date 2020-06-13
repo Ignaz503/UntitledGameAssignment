@@ -111,7 +111,7 @@ namespace UntitledGameAssignment
 
             // TODO: use this.Content to load your game content here
 
-            var player = LoadPlayers();
+           var player = LoadPlayers();
 
             //LoadTestGrid();
 
@@ -219,12 +219,13 @@ namespace UntitledGameAssignment
             obj.Transform.Position = Camera.Active.ScreenToWorld( Vector2.Zero );
 
             var pF = new GameObject();
+            pF.Name = nameof( PathFollower );
 
             pF.Transform.Position = Camera.Active.ScreenToWorld( new Vector2( 500, 80 ) );
 
             pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/heart", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
 
-            var pathFollower = pF.AddComponent( ( j ) => new PathFollower(0.005f, j, 0.5f ) );
+            var pathFollower = pF.AddComponent( ( j ) => new PathFollower(0.005f, j, 15f ) );
 
             //AddObjectsToEitherSide(obj, recursion: 2 );
 

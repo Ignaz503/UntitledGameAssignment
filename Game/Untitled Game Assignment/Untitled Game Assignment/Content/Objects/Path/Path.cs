@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Security.Cryptography;
-using Util.CustomDebug;
+using System.Diagnostics;
 using Util.CustomMath;
 
 public class Path
 {
     public Vector2[] Points { get; set; }
-
     public int Length => Points.Length;
 
     public int CurrentIdx { get; protected set; }
@@ -109,7 +107,7 @@ public class Path
             newT = (t - currentT) / (nextT - currentT);
         }
         else
-            newT = currentIdx;
+            newT = currentT;
         
         return VectorMath.CatmullRom( Points[prevIdx], Points[currentIdx], Points[nextIdx], Points[nextOneOver], newT);
 
