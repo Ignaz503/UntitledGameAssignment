@@ -10,13 +10,11 @@ using System.Threading;
 
 public class LifeTime : Component, IUpdate
 {
-    double Start;
-    double TimeToDie;
+    public double TimeToDie;
 
     public LifeTime( GameObject obj, double timeToDie = 1.5f ) : base( obj )
     {
-        Start = TimeInfo.timeStep.TotalGameTime.TotalSeconds;
-        TimeToDie = timeToDie;
+        TimeToDie = TimeInfo.timeStep.TotalGameTime.TotalSeconds + timeToDie;
     }
 
     public override void OnDestroy()
@@ -24,7 +22,7 @@ public class LifeTime : Component, IUpdate
 
     public void Update()
     {
-        if (TimeInfo.timeStep.TotalGameTime.TotalSeconds > Start + TimeToDie)
+        if (TimeInfo.timeStep.TotalGameTime.TotalSeconds > TimeToDie)
         {
             this.GameObject.Destroy();
         }

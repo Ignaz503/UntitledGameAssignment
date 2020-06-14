@@ -85,7 +85,7 @@ public class RigidBody2D : Component, IUpdate
         Vector2 n = (Transform.Position - opponent.Transform.Position) / (Transform.Position - opponent.Transform.Position).Length();
 
         Transform.Position += (part1 * n * n) * 3.0f; //move out of collider
-        Transform.Velocity *= -0.5f;
+        Transform.Velocity *= -0.0f; // move away from collider
         OverrideImpulse(part1 * n * n, 1.0f);
 
         //Debug.Log("adding impulse of " + part1 * n * n + " to " + GameObject.Name);

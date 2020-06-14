@@ -16,19 +16,23 @@ public class BoxCollider : Component, IUpdate
     /// </summary>
     public SortingLayer Layer;
     public List<SortingLayer> Neglect;
-    double Last;
+
+    bool Visualize;
+    double ShowTime;
 
     SpriteRenderer SpriteRen;
     public Rectangle BoundingBox;
     public List<GameObject> Collisions { get; private set; }
 
-    public BoxCollider( SpriteRenderer spriteRen, GameObject obj, SortingLayer layer, List<SortingLayer> neglect = null ) : base( obj )
+    public BoxCollider( SpriteRenderer spriteRen, GameObject obj, SortingLayer layer, List<SortingLayer> neglect = null, bool visualize = false ) : base( obj )
     {
         Layer = layer;
         SpriteRen = spriteRen;
-        BoundingBox = new Rectangle(this.GameObject.Transform.Position.ToPoint(), SpriteRen.Sprite.Bounds.Size);
+        BoundingBox = new Rectangle((this.GameObject.Transform.Position - SpriteRen.Sprite.Bounds.Size.ToVector2() / 2.0f).ToPoint(), SpriteRen.Sprite.Bounds.Size);
         Collisions = new List<GameObject>();
-        Last = 0.0f;
+
+        Visualize = visualize;
+        ShowTime = 0.0f; // TimeInfo.timeStep.TotalGameTime.TotalSeconds + 0.1f;
 
         if (neglect == null)
             Neglect = new List<SortingLayer>();
@@ -43,12 +47,31 @@ public class BoxCollider : Component, IUpdate
 
     public void Update()
     {
-        BoundingBox = new Rectangle(this.GameObject.Transform.Position.ToPoint(), SpriteRen.Sprite.Bounds.Size);
+        BoundingBox = new Rectangle((this.GameObject.Transform.Position - SpriteRen.Sprite.Bounds.Size.ToVector2() / 2.0f).ToPoint(), SpriteRen.Sprite.Bounds.Size);
         Collisions.Clear();
         Collide();
         UpdateVelocity();
 
-        Last = TimeInfo.timeStep.TotalGameTime.TotalSeconds;
+        if (TimeInfo.timeStep.TotalGameTime.TotalSeconds > ShowTime && Visualize)
+        {
+            Particle Lcoll = new Particle(new Vector2(BoundingBox.Left, BoundingBox.Center.Y));
+            Lcoll.AddComponent((obj) => new LifeTime(obj, 0.0001f));
+            Scene.Current.Instantiate(Lcoll);
+
+            Particle Rcoll = new Particle(new Vector2(BoundingBox.Right, BoundingBox.Center.Y));
+            Rcoll.AddComponent((obj) => new LifeTime(obj, 0.0001f));
+            Scene.Current.Instantiate(Rcoll);
+
+            Particle Tcoll = new Particle(new Vector2(BoundingBox.Center.X, BoundingBox.Top));
+            Tcoll.AddComponent((obj) => new LifeTime(obj, 0.0001f));
+            Scene.Current.Instantiate(Tcoll);
+
+            Particle Bcoll = new Particle(new Vector2(BoundingBox.Center.X, BoundingBox.Bottom));
+            Bcoll.AddComponent((obj) => new LifeTime(obj, 0.0001f));
+            Scene.Current.Instantiate(Bcoll);
+
+            ShowTime = TimeInfo.timeStep.TotalGameTime.TotalSeconds + 0.1f;
+        }
     }
 
     /// <summary>
@@ -81,57 +104,40 @@ public class BoxCollider : Component, IUpdate
             RigidBody2D opponent = collider.GetComponent<RigidBody2D>();
             RigidBody2D self = this.GameObject.GetComponent<RigidBody2D>();
 
+            Vector2 collisionPoint = Vector2.Zero;
+
             //Add impulses if applicable
             if (opponent != null && self != null)
             {
                 // Add angular momentum to colliding RigidBody
                 if (Transform.Velocity.X > 0 && this.IsTouchingLeft(query))
                 {
-                    Vector2 L = new Vector2(BoundingBox.Left, BoundingBox.Center.Y);
-                    //Debug.Log(Transform.Position + " L " + L + " C. " + BoundingBox.Center);
-
-                    if (opponent.IsKinematic)
-                        opponent.AddTorque(L, self.Impulse, 1.0f);
-                    if (self.IsKinematic)
-                        self.AddTorque(L, opponent.Impulse, 1.0f);
+                    collisionPoint = new Vector2(BoundingBox.Left, BoundingBox.Center.Y);
                 }
                 else if (Transform.Velocity.X < 0 && this.IsTouchingRight(query))
                 {
-                    Vector2 R = new Vector2(BoundingBox.Right, BoundingBox.Center.Y);
-                    //Debug.Log(Transform.Position + " R " + R);
-
-                    if (opponent.IsKinematic)
-                        opponent.AddTorque(R, self.Impulse, 1.0f);
-                    if (self.IsKinematic)
-                        self.AddTorque(R, opponent.Impulse, 1.0f);
+                    collisionPoint = new Vector2(BoundingBox.Right, BoundingBox.Center.Y);
                 }
                 else if (Transform.Velocity.Y > 0 && this.IsTouchingTop(query))
                 {
-                    Vector2 T = new Vector2(BoundingBox.Center.X, BoundingBox.Top);
-                    //Debug.Log(Transform.Position + " T " + T);
-
-                    if (opponent.IsKinematic)
-                        opponent.AddTorque(T, self.Impulse, 1.0f);
-                    if (self.IsKinematic)
-                        self.AddTorque(T, opponent.Impulse, 1.0f);
+                    collisionPoint = new Vector2(BoundingBox.Center.X, BoundingBox.Top);
                 }
                 else if (Transform.Velocity.Y < 0 && this.IsTouchingBottom(query))
                 {
-                    Vector2 B = new Vector2(BoundingBox.Center.X, BoundingBox.Bottom);
-                    //Debug.Log(Transform.Position + " B " + B);
-
-                    if (opponent.IsKinematic)
-                        opponent.AddTorque(B, self.Impulse, 1.0f);
-                    if (self.IsKinematic)
-                        self.AddTorque(B, opponent.Impulse, 1.0f);
+                    collisionPoint = new Vector2(BoundingBox.Center.X, BoundingBox.Bottom);
                 }
 
                 // Add existing movement and impulse to colliding RigidBody
-
                 if (opponent.IsKinematic)
+                {
+                    opponent.AddTorque(collisionPoint, self.Impulse, 1.0f);
                     opponent.Bounce(self);
+                }
                 if (self.IsKinematic)
+                {
+                    self.AddTorque(collisionPoint, opponent.Impulse, 1.0f);
                     self.Bounce(opponent);
+                }
 
                 //query.Collisions.Remove(GameObject);
             }
@@ -152,7 +158,7 @@ public class BoxCollider : Component, IUpdate
     public bool IsTouchingRight(BoxCollider query)
     {
         Rectangle qBox = query.BoundingBox;
-        return BoundingBox.Left - Transform.Velocity.X < qBox.Right &&
+        return BoundingBox.Left + Transform.Velocity.X < qBox.Right &&
             BoundingBox.Right > qBox.Right &&
             BoundingBox.Bottom > qBox.Top &&
             BoundingBox.Top < qBox.Bottom &&
@@ -174,7 +180,7 @@ public class BoxCollider : Component, IUpdate
     public bool IsTouchingBottom(BoxCollider query)
     {
         Rectangle qBox = query.BoundingBox;
-        return BoundingBox.Top - Transform.Velocity.Y < qBox.Bottom &&
+        return BoundingBox.Top + Transform.Velocity.Y < qBox.Bottom &&
             BoundingBox.Bottom > qBox.Bottom &&
             BoundingBox.Right > qBox.Left &&
             BoundingBox.Left < qBox.Right &&

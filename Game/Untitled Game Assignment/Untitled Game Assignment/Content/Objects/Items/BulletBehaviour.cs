@@ -42,6 +42,7 @@ public class BulletBehaviour : Component, IUpdate
                     }
 
                     //collider.Destroy();
+                    this.GameObject.AddComponent((obj) => new LifeTime(obj, 0.1f));
                     //this.GameObject.Destroy();
                 }
             }
