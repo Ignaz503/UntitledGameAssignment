@@ -158,8 +158,9 @@ namespace UntitledGameAssignment
             player.AddComponent( ( obj ) => new ShootScript( obj, 15.0f ) );
             player.AddComponent( ( obj ) => new RigidBody2D( obj, 50.0f, SortingLayer.Entities ) );
             player.AddComponent( ( obj ) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities + 1 ) );
-
-            //VectorField swirl = new VectorField(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()) - new Vector2(10.0f, 10.0f));
+            
+            player.AddComponent( ( obj ) => new RepulseField( obj, 0.01f, 1.0f, true ) );;
+            player.AddComponent( ( obj ) => new SpawnParticles( obj, 150, 0.5f, "Sprites/firefly" ) );
 
             var p2 = new TempPlayer(
                 Camera.Active.ScreenToWorld(camcenter + Vector2.One*50f),

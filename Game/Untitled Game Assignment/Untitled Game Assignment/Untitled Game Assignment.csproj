@@ -52,10 +52,11 @@
   <ItemGroup>
     <Compile Include="Content\Objects\DestuctableBox\Components\Destructable.cs" />
     <Compile Include="Content\Objects\DestuctableBox\DestructableBox.cs" />
-    <Compile Include="Content\Objects\Field\RectField.cs" />
-    <Compile Include="Content\Objects\Field\ConcentricField.cs" />
-    <Compile Include="Content\Objects\Field\VectorField.cs" />
+    <Compile Include="Content\Objects\Field\Particle.cs" />
+    <Compile Include="Content\Objects\Field\SpawnParticles.cs" />
+    <Compile Include="Content\Objects\Field\RepulseField.cs" />
     <Compile Include="Content\Objects\Items\Bullet.cs" />
+    <Compile Include="Content\Objects\Items\LifeTime.cs" />
     <Compile Include="Content\Objects\Items\Wall.cs" />
     <Compile Include="Content\Objects\Path\Path.cs" />
     <Compile Include="Content\Objects\Path\PathCreator.cs" />

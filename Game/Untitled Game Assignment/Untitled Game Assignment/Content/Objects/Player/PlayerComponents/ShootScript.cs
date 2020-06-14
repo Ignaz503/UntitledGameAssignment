@@ -31,6 +31,7 @@ public class ShootScript : Component, IUpdate
         if (Input.IsKeyDown(MouseButtons.Right))
         {
             Bullet b = new Bullet(Transform.Position + direction*17, direction, Speed, this.GameObject);
+            b.AddComponent( ( obj ) => new LifeTime( obj, 1.5f ) );
             Scene.Current.Instantiate(b);
         }
     }

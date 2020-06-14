@@ -11,16 +11,10 @@ using System.Threading;
 public class BulletBehaviour : Component, IUpdate
 {
     GameObject Shooter;
-    double Start;
-    //double Last;
-    double TimeToDie;
 
-    public BulletBehaviour( GameObject obj, GameObject shooter, double timeToDie = 1.5f ) : base( obj )
+    public BulletBehaviour( GameObject obj, GameObject shooter ) : base( obj )
     {
         Shooter = shooter;
-        Start = TimeInfo.timeStep.TotalGameTime.TotalSeconds;
-        TimeToDie = timeToDie;
-        //Last = 0.0f;
     }
 
     public override void OnDestroy()
@@ -29,17 +23,6 @@ public class BulletBehaviour : Component, IUpdate
     public void Update()
     {
         Hit();
-
-        if (TimeInfo.timeStep.TotalGameTime.TotalSeconds > Start + TimeToDie)
-        {
-            this.GameObject.Destroy();
-        }
-
-        /*if (TimeInfo.timeStep.TotalGameTime.TotalSeconds - Last > 0.2f )
-        {
-            Debug.Log("Impulse: " + this.GameObject.GetComponent<RigidBody2D>().Impulse);
-            Last = TimeInfo.timeStep.TotalGameTime.TotalSeconds;
-        }*/
 
         //Debug.Log("V = " + Transform.Velocity);
         //Transform.Velocity = Direction * Speed;
