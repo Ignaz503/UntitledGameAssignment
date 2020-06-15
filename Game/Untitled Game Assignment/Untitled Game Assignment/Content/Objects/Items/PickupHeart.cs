@@ -13,8 +13,8 @@ public class PickupHeart : GameObject
 
         SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/heart", c , SortingLayer.EntitesSubLayer(1), obj));
 
-        AddComponent( (obj) => new BoxCollider(spriteRen, obj, SortingLayer.Entities) );
-        AddComponent( (obj) => new RigidBody2D(obj, 1.1f) );
+        AddComponent( (obj) => new BoxCollider( spriteRen, obj, SortingLayer.Entities ) );
+        AddComponent( (obj) => new RigidBody2D( obj, 1.5f, SortingLayer.Entities ) );
 
         AddComponent( (obj) => new PickupHeartBehaviour(obj, heal, c) );
 

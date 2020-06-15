@@ -12,24 +12,21 @@ using System.Collections.Generic;
 
 public class Bullet : GameObject
 {
-    float rot;
-
     public Bullet( Vector2 position, Vector2 direction, float speed, GameObject shooter )
     {
         Transform.Position = position;
 
-        rot = (VectorMath.Angle(direction.X, direction.Y) + 90.0f) / 180.0f * (float)Math.PI;
-        Transform.Rotation = rot;
+        //Transform.Rotation =  (VectorMath.Angle(direction.X, direction.Y) + 90.0f) / 180.0f * (float)Math.PI;
 
-        //Debug.Log(direction.X + ", " + direction.Y + ": " + rot);
+        AddComponent((obj) => new VelocityBasedRotationController(obj, Transform) );
 
         SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/bullet", Color.White, 1, obj));
 
-        List<SortingLayer> player = new List<SortingLayer>();
-        player.Add(SortingLayer.Entities + 1);
-        AddComponent( (obj) => new BoxCollider(spriteRen, obj, SortingLayer.Entities + 1, true, player) );
+        List<SortingLayer> shooterlayer = new List<SortingLayer>();
+        shooterlayer.Add(shooter.GetComponent<BoxCollider>().Layer);
+        AddComponent( (obj) => new BoxCollider(spriteRen, obj, SortingLayer.Entities, shooterlayer) );
 
-        RigidBody2D rb = AddComponent((obj) => new RigidBody2D(obj, 1.01f));
+        RigidBody2D rb = AddComponent( (obj) => new RigidBody2D(obj, 1.01f, 1.0f) );
                       
         AddComponent( (obj) => new BulletBehaviour(obj, shooter) );
 

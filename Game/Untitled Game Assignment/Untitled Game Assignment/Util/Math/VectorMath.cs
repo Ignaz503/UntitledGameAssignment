@@ -110,6 +110,21 @@ namespace Util.CustomMath
             else if (y < 0.0f) // quadrant 4
                 ret = 270.0f + (90.0f + ret);
 
+            return ret % 360;
+        }
+
+        /// <summary>
+        /// returns angle based on input vector, correctly rotated based on quadrant
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float DiffAngle(float x1, float y1, float x2, float y2)
+        {
+            float a2 = (float)Math.Atan2(y1, x1);
+            float a1 = (float)Math.Atan2(y2, x2);
+            float sign = a1 > a2 ? 1 : -1;
+            float diff = a1 - a2;
+            float ret = (Math.Abs(-sign * (float)Math.PI * 2.0f + diff) < Math.Abs(diff)) ? -sign * (float)Math.PI * 2.0f + diff : diff;
+
             return ret;
         }
 

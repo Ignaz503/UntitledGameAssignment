@@ -11,14 +11,10 @@ using System.Threading;
 public class BulletBehaviour : Component, IUpdate
 {
     GameObject Shooter;
-    double Start;
-    double TimeToDie;
 
-    public BulletBehaviour( GameObject obj, GameObject shooter, double timeToDie = 2.0f ) : base( obj )
+    public BulletBehaviour( GameObject obj, GameObject shooter ) : base( obj )
     {
         Shooter = shooter;
-        Start = TimeInfo.timeStep.TotalGameTime.TotalSeconds;
-        TimeToDie = timeToDie;
     }
 
     public override void OnDestroy()
@@ -28,11 +24,6 @@ public class BulletBehaviour : Component, IUpdate
     {
         Hit();
 
-        if (TimeInfo.timeStep.TotalGameTime.TotalSeconds > Start + TimeToDie)
-        {
-            this.GameObject.Destroy();
-        }
-        
         //Debug.Log("V = " + Transform.Velocity);
         //Transform.Velocity = Direction * Speed;
     }
@@ -51,7 +42,8 @@ public class BulletBehaviour : Component, IUpdate
                     }
 
                     //collider.Destroy();
-                    this.GameObject.Destroy();
+                    this.GameObject.AddComponent((obj) => new LifeTime(obj, 0.1f));
+                    //this.GameObject.Destroy();
                 }
             }
         }

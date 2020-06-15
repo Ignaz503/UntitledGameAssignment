@@ -134,47 +134,64 @@ namespace UntitledGameAssignment
 
         private GameObject LoadPlayers()
         {
-            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), (obj) => new MovementController(obj, walkSpeed: 10f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
+            Vector2 camcenter = VirtualViewport.Bounds.Center.ToVector2();
+            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(camcenter), (obj) => new MovementController(obj, walkSpeed: 5.0f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
             
-            TankTreads treads = new TankTreads(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), SortingLayer.Entities, player, TankTreads.tint.white, "Sprites/playerlegr");
+            TankTreads treads = new TankTreads(Camera.Active.ScreenToWorld(camcenter), SortingLayer.Entities, player, TankTreads.tint.white, "Sprites/playerlegr");
             List<String> sprites = new List<string>();
             sprites.Add("Sprites/playerlegr");
+            sprites.Add("Sprites/playerleg");
             sprites.Add("Sprites/playerlegl");
-            treads.AddComponent( (obj) => new SpriteFlicker(obj, treads.SpriteRen, sprites, true, 0.5f));
+            sprites.Add("Sprites/playerleg");
+            treads.AddComponent( (obj) => new SpriteFlicker(obj, treads.SpriteRen, sprites, true, 0.2f));
 
             player.AddComponent( ( obj ) => new MouseLocationBasedRotationController( obj ) );
-            player.AddComponent( ( obj ) => new ShootScript( obj, 4.0f ) );
-            player.AddComponent( (obj) => new RigidBody2D(obj, 10.0f) );
-
-            List<SortingLayer> neglectSelf = new List<SortingLayer>();
-            neglectSelf.Add(SortingLayer.Entities + 1);
-            player.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities + 1, true, neglectSelf) );
+            player.AddComponent( ( obj ) => new ShootScript( obj, 15.0f ) );
+            player.AddComponent( ( obj ) => new RigidBody2D( obj, 50.0f, SortingLayer.Entities ) );
+            player.AddComponent( ( obj ) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities + 1 ) );
+            
+            player.AddComponent( ( obj ) => new RepulseField( obj, 0.01f, 1.0f, true ) );;
+            player.AddComponent( ( obj ) => new SpawnParticles( obj, 150, 0.5f, "Sprites/firefly" ) );
 
             var p2 = new TempPlayer(
-                Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()+Vector2.One*50f),
+                Camera.Active.ScreenToWorld(camcenter + Vector2.One*50f),
                 null,
                 SortingLayer.EntitesSubLayer(1),
                 TempPlayer.tint.white,
-                "Sprites/playershoulders",
+                "Sprites/tank_gun",
                 Keys.Y,
                 Keys.X);
-            p2.AddComponent( (obj) => new RigidBody2D(obj, 1.5f));
-            p2.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities) );
+            var p2_treads = new TankTreads(p2.Transform.Position, SortingLayer.EntitesSubLayer(1), p2, TankTreads.tint.white, "Sprites/tank_treads");
 
             AddShieldToObject( p2, 1f, 1f, 4);
 
             //////temp, will move this
             //var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
             //spike.AddComponent( ( obj ) => new GravPull( obj, tankplayer, mass: 0.5f, effectiveRadius: 300.0f, rotate: true ) );
+            p2.AddComponent( (obj) => new RigidBody2D( obj, 1.5f, SortingLayer.Entities ) );
+            p2.AddComponent( (obj) => new BoxCollider( player.SpriteRen, obj, SortingLayer.Entities ) );
+
+            var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
+            spike.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 300.0f, rotate: true ) );
+
+            var wall1 = new Wall(camcenter + Vector2.UnitX * -20, (float)Math.PI);
+            wall1.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var wall2 = new Wall(camcenter + Vector2.UnitX * -84, (float)Math.PI * 2);
+            wall2.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var wall3 = new Wall(camcenter + Vector2.UnitX * -20 + Vector2.UnitY * -64, (float)Math.PI);
+            wall3.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var wall4 = new Wall(camcenter + Vector2.UnitX * -84 + Vector2.UnitY * -64, (float)Math.PI * 2);
+            wall4.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
 
             var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
-            red_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
-            
+            red_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
+
             var blue_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(500, 80)), heal: player, Color.Blue);
-            blue_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
+            blue_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
             
             var green_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(200, 300)), heal: player, Color.Green);
-            green_heart.AddComponent( ( obj ) => new GravPull( obj, player, mass: 0.25f, effectiveRadius: 200.0f, rotate: false ) );
+            green_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
+			
 
             var destructableBox = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(500, 300)),player);
             var destructableBox1 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(130, 100)),player);

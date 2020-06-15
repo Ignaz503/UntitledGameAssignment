@@ -13,31 +13,28 @@ public class GravPull : Component, IUpdate
 {
     Boolean Rotate;
     Transform Target;
-    Vector2 StoredVelocity;
     Vector2 Direction;
+    RigidBody2D Rb;
+    RigidBody2D TargetRb;
 
-    float Distance;
     float Force;
+    float Distance;
     float EffectiveRadius;
-    public float Mass;
-    float TargetMass;
 
-    public GravPull( GameObject obj, GameObject target, float mass = 5.0f , float effectiveRadius = 100.0f , Boolean rotate = true) : base( obj )
+    public GravPull( GameObject obj, GameObject target, float effectiveRadius = 100.0f , Boolean rotate = true) : base( obj )
     {
+        Rb = this.GameObject.GetComponent<RigidBody2D>();
+        TargetRb = target.GetComponent<RigidBody2D>();
+
         Target = target.Transform;
-        Force = 0.0f;
-        Mass = mass;
         Rotate = rotate;
-        StoredVelocity = Vector2.Zero;
+
         EffectiveRadius = effectiveRadius;
 
-        if (target.GetComponent<GravPull>() == null)
+        if (Rb == null || TargetRb == null)
         {
-            TargetMass = 5.0f;
-        }
-        else
-        {
-            TargetMass = target.GetComponent<GravPull>().Mass;
+            Debug.Log("GravPull without RigidBody");
+            this.Disable();
         }
     }
      
@@ -63,24 +60,17 @@ public class GravPull : Component, IUpdate
         if ( Distance > EffectiveRadius)
             return;
 
-        Force = (Mass * TargetMass) / (float)Math.Pow(Distance, 2);
+        Force = (Rb.Mass * TargetRb.Mass) / (float)Math.Pow(Distance, 2);
 
-        //clamp max force
-        if (Force >= 10.0f)
-        {
-            Force = 10.0f;
-        }
+        Direction.Normalize();
+        Rb.AddImpulse(Direction, Force);
         
-        Transform.Velocity += (Direction * Force) + StoredVelocity;
 
         if (Rotate)
         {
             float rot = (VectorMath.Angle(Direction.X, Direction.Y) + 90.0f) / 180.0f * (float)Math.PI;
-            Transform.Rotation = rot;
+            Transform.RotationVelocity += -(Transform.Rotation + rot - 4.0f);
         }
-
-        // store old velocity delta to add to next velocity, skews results, but keeps momentum better than setting velocity to 0 after update
-        StoredVelocity = (Direction * Force) + StoredVelocity * 0.9f;
     }
 }
 
