@@ -14,6 +14,8 @@ using Util.AssetManagment;
 using GeoUtil.Polygons;
 using UntitledGameAssignment.Core.GameObjects;
 using Util.SortingLayers;
+using Loyc.Geometry;
+using Util.CustomMath;
 
 namespace UntitledGameAssignment
 {
@@ -109,11 +111,9 @@ namespace UntitledGameAssignment
 
             // TODO: use this.Content to load your game content here
 
-            var player = LoadPlayers();
+           var player = LoadPlayers();
 
             //LoadTestGrid();
-
-            //LoadTestPolygon();
 
             LoadTestPathFollow();
 
@@ -130,15 +130,6 @@ namespace UntitledGameAssignment
         {
             GameObject obj = new GameObject();
             obj.AddComponent( j => new UpdateRateAdapter( Keys.D9, Keys.D0, j ) );
-        }
-
-        private void LoadTextTest()
-        {
-            GameObject obj = new GameObject();
-
-            obj.Transform.Position = Camera.Active.ScreenToWorld( VirtualViewport.Bounds.Center.ToVector2() );
-            obj.Transform.Scale = Vector2.One * .5f;
-            obj.AddComponent( ( j ) => new TextRenderer( "This is a Test", Color.Black, 0, j ) );
         }
 
         private GameObject LoadPlayers()
@@ -170,7 +161,9 @@ namespace UntitledGameAssignment
             p2.AddComponent( (obj) => new RigidBody2D(obj, 1.5f));
             p2.AddComponent( (obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities) );
 
-            ////temp, will move this
+            AddShieldToObject( p2, 1f, 1f, 4);
+
+            //////temp, will move this
             //var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
             //spike.AddComponent( ( obj ) => new GravPull( obj, tankplayer, mass: 0.5f, effectiveRadius: 300.0f, rotate: true ) );
 
@@ -191,25 +184,26 @@ namespace UntitledGameAssignment
             return player;
         }
 
-        void LoadTestPolygon()
+        private void AddShieldToObject( GameObject @object,float speed,float dir, int recursion)
         {
-            var pol = new TestPolygon(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2()), new Polygon(new Vector2[]
-                                {
-                                    new Vector2(-.5f,-.5f),
-                                    new Vector2(-.5f,.5f),
-                                    new Vector2(.5f,.5f)
-                                    ,new Vector2(.5f,-.5f)
-                                }));
 
-            var pol1 = new TestPolygon(Camera.Active.ScreenToWorld(VirtualViewport.Bounds.Center.ToVector2() + Vector2.UnitX * 50f), new Polygon(new Vector2[]
-                                {
-                                    new Vector2(0.6f,1f),
-                                    new Vector2(0,0.8f),
-                                    new Vector2(0.4f,0),
-                                    new Vector2(0.8f,0.6f),
-                                    new Vector2(1f,0f),
-                                    new Vector2(1f,0.8f)
-                                }));
+            if (recursion == 0)
+                return;
+
+            recursion--;
+            var motor = new GameObject();
+            motor.Transform.Parent = @object.Transform;
+            motor.Transform.LocalPosition = Vector2.Zero;
+
+            motor.AddComponent( j => new Rotator( j, speed: speed, direction:dir) );
+
+            var shield = new GameObject();
+
+            shield.Transform.Parent = motor.Transform;
+            shield.Transform.LocalPosition = new Vector2( 0f, 40f );
+            shield.Transform.Scale = new Vector2( 0.75f, 0.75f );
+            var ren =shield.AddComponent(j=> new SpriteRenderer( "Sprites/shield", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+            AddShieldToObject( shield, speed*2f, -dir, recursion);
         }
 
         private void LoadTestGrid()
@@ -217,14 +211,25 @@ namespace UntitledGameAssignment
             GameObject obj = new GameObject();
             var t = obj.AddComponent( ( j ) => new TestTileMap( Camera.Active.Origin - new Vector2(40,40)*.5f * 50f,40, j ) );
             var at = AStarTileMap.CreateAStarMap( t );
-            obj.AddComponent( j => new AStarVisualize( t, at, j ) );
         }
 
         void LoadTestPathFollow()
         {
             var obj = new GameObject();
             obj.Transform.Position = Camera.Active.ScreenToWorld( Vector2.Zero );
-            obj.AddComponent( ( j ) => new PathCreator( AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ), j ) );
+
+            var pF = new GameObject();
+            pF.Name = nameof( PathFollower );
+
+            pF.Transform.Position = Camera.Active.ScreenToWorld( new Vector2( 500, 80 ) );
+
+            pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/heart", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+
+            var pathFollower = pF.AddComponent( ( j ) => new PathFollower(0.005f, j, 18f ) );
+
+            //AddObjectsToEitherSide(obj, recursion: 2 );
+
+            obj.AddComponent( ( j ) => new PathCreator(pathFollower,AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ), .5f, j ) );
         }
 
         /// <summary>

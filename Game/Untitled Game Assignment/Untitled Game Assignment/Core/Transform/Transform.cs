@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Util.CustomMath;
 using UntitledGameAssignment.Core.GameObjects;
 using UntitledGameAssignment.Core.SceneGraph;
-using Util.CustomDebug;
 using UntitledGameAssignment.Core.Components;
+using Util.CustomMath;
 
 namespace UntitledGameAssignment.Core
 {
@@ -36,10 +36,12 @@ namespace UntitledGameAssignment.Core
                     //TODO maybe switch
                     TraverseToRoot( ( pT ) => trans = pT.inverseTransform * trans);
                     LocalPosition = Vector2.Transform( value, trans );
+
                 } else
                 {
                     LocalPosition = value;
                 }
+
             }
         }
 
@@ -365,13 +367,23 @@ namespace UntitledGameAssignment.Core
             //where tn sn pn are the matrices of this transform and the root is t-s-r0
             Matrix trans = transform;
 
-            TraverseToRoot( ( pT ) => trans = trans * pT.transform);
+            //if (GameObject != null && GameObject.Name == nameof( PathFollower ))
+            //{
+            //    Debug.WriteLine($"local rot: {localRotationMatrix}");
+            //    Debug.WriteLine($"local scale: {scaleMatrix}");
+            //    Debug.WriteLine($"local tanslation: {localTranslationMatrix}");
+            //    Debug.WriteLine($"transform :{trans}");
+            //}
+
+            TraverseToRoot( ( pT ) => {
+                    trans = trans * pT.transform;
+            } );
 
             var r = Vector2.Transform( localPoint, trans );
 
             //if (HasParent)
             //    Debug.Log( $"{GameObject.Name} Rotation: {Rotation}" );
-   
+
             return r;
         }
 
@@ -439,6 +451,11 @@ namespace UntitledGameAssignment.Core
         internal void TraverseChildren( Action<Transform> actionForChild, bool childrenTraversalRecursion= true, bool checkIfEnabledForRecursion = true ) 
         {
 
+            if (this != Scene.Current.Root && !GameObject.IsEnabled)
+            {
+                return;
+            }
+
             if (actionForChild == null || children == null)
                 return;
             for (int i = 0; i < children.Count; i++)
@@ -460,7 +477,7 @@ namespace UntitledGameAssignment.Core
                 }
             }
 
-            //TODO: move this maybe, although it does work here, just doesnt fit in this method
+            ////TODO: move this maybe, although it does work here, just doesnt fit in this method
             this.Position += this.Velocity;
             //this.Velocity -= this.Velocity * 0.99f;
             this.Velocity *= 0.75f;

@@ -19,9 +19,9 @@ using Util.TextureHelper;
 
 public static class Shatter
 {
-    public static void ShatterBox(Rect bounds, Vector2[] seedPoints,Vector2 position, Vector2Int textureSize, Texture2D originalTexture, Vector2 hitPosition,Random rng) 
+    public static void ShatterBox(Rect bounds, Vector2[] seedPoints,Vector2 position, Vector2Int textureSize, Texture2D originalTexture, Vector2 hitPosition,SortingLayer sortingLayer, Random rng) 
     {
-        ThreadedDataRequestor.Instance.RequestData( ()=>MakePolygons(seedPoints,bounds), ( p ) => OnPolygonsRecieved( p, bounds, position, textureSize, originalTexture,hitPosition, rng ));
+        ThreadedDataRequestor.Instance.RequestData( ()=>MakePolygons(seedPoints,bounds), ( p ) => OnPolygonsRecieved( p, bounds, position, textureSize, originalTexture,hitPosition,sortingLayer, rng ));
     }
 
     static List<IPolygon> MakePolygons(Vector2[] seedPoints, Rect bounds) 
@@ -29,7 +29,7 @@ public static class Shatter
         return Voronoi.Shatter( seedPoints, bounds );
     }
 
-    static void OnPolygonsRecieved(object obj_polygons,Rect bounds,Vector2 positon, Vector2Int textureSize, Texture2D originalTexture,Vector2 hitPosition, Random rng) 
+    static void OnPolygonsRecieved(object obj_polygons,Rect bounds,Vector2 positon, Vector2Int textureSize, Texture2D originalTexture,Vector2 hitPosition, SortingLayer sortingLayer, Random rng) 
     {
         var polygons = obj_polygons as List<IPolygon>;
 
@@ -40,7 +40,7 @@ public static class Shatter
             var newTexture = new Texture2D(GameMain.Instance.GraphicsDevice,textureSize.X,textureSize.Y);
 
             float tDir = (float)rng.NextDouble();
-            ThreadedDataRequestor.Instance.RequestData(()=> GenerateTexture(poly,textureSize,newTexture,originalTexture.GetPixels(),bounds),(t)=>MakeGameobject(t,positon,hitPosition,tDir,tForce));
+            ThreadedDataRequestor.Instance.RequestData(()=> GenerateTexture(poly,textureSize,newTexture,originalTexture.GetPixels(),bounds),(t)=>MakeGameobject(t,positon,hitPosition,sortingLayer,tDir,tForce));
         }
     }
 
@@ -78,14 +78,14 @@ public static class Shatter
         return newTexture;
     }
 
-    static void MakeGameobject( object obj_newTexture, Vector2 position, Vector2 hitPosition, float tDir, float tForce) 
+    static void MakeGameobject( object obj_newTexture, Vector2 position, Vector2 hitPosition, SortingLayer sortingLayer,float tDir, float tForce) 
     {
         var newTexture = obj_newTexture as Texture2D;
 
         var gObj = new GameObject();
         gObj.Transform.Position = position;
 
-        gObj.AddComponent( j => new SpriteRenderer( newTexture, Color.White, SortingLayer.Entities, SpriteEffects.None, j ) );
+        gObj.AddComponent( j => new SpriteRenderer( newTexture, Color.White, sortingLayer, SpriteEffects.None, j ) );
         var body = gObj.AddComponent( ( obj ) => new RigidBody2D( obj, 1.2f ) );
 
         var dir = position - hitPosition;

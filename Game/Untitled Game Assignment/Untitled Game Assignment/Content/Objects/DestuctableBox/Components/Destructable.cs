@@ -88,7 +88,7 @@ class Destructable : Component
 
         }
 
-        Shatter.ShatterBox( r, seedPoints, pos, texSize, originaltexture, hitPosition, rng );
+        Shatter.ShatterBox( r, seedPoints, pos, texSize, originaltexture, hitPosition, renderer.Layer, rng );
 
         this.GameObject.Destroy();
     }
