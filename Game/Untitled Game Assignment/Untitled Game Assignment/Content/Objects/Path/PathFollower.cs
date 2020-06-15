@@ -113,8 +113,6 @@ public class PathFollower : Component, IFixedUpdate
             arc = 1f -0.001f;
         }
 
-        Debug.WriteLine( arc );
-
         Vector2 newPos;
         if (reverse) {
             newPos = reversePathToFollow.FollowPathCatmullRom( arc ); 
