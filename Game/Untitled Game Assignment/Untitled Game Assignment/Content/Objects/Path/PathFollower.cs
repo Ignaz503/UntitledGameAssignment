@@ -29,7 +29,7 @@ public class PathFollower : Component, IFixedUpdate
         }
     }
 
-    float t = 0f;
+    float s = 0f;
 
     float sampleRate;
 
@@ -42,7 +42,7 @@ public class PathFollower : Component, IFixedUpdate
 
     public PathFollower( float sampleRate, GameObject obj, float speed ) : base( obj )
     {
-        t = 0f;
+        s = 0f;
         this.sampleRate = sampleRate;
         this.Speed = speed;
         reverse = false;
@@ -57,35 +57,37 @@ public class PathFollower : Component, IFixedUpdate
         var entriesForward = new ArcPair[iter];
         var entriesBackward = new ArcPair[iter];
 
-        Vector2 initialPosition = pathToFollow.FollowPathCatmullRom(0f);
+        Vector2 prevPositionForward = pathToFollow.FollowPathCatmullRom(0f);
         float totalForward = 0f;
 
         float totalBackwards = 0f;
-        Vector2 initialPositionBackwards = reversePathToFollow.FollowPathCatmullRom(0f);
+        Vector2 prevPositionBackwards = reversePathToFollow.FollowPathCatmullRom(0f);
 
         for (int i = 0; i < iter; i++)
         {
             float sample = i * sampleRate;
 
             Vector2 newPosForward = pathToFollow.FollowPathCatmullRom(sample);
-            float dForward =  (newPosForward - initialPosition).Length();
+            float dForward =  (newPosForward - prevPositionForward).Length();
             totalForward += dForward;
-            entriesForward[i] = new ArcPair( sample, totalForward);
+            entriesForward[i] = new ArcPair( totalForward, sample);
+            prevPositionForward = newPosForward;
 
             Vector2 newPosBackward = reversePathToFollow.FollowPathCatmullRom(sample);
-            float dBackwards = (newPosBackward-initialPositionBackwards).Length();
+            float dBackwards = (newPosBackward-prevPositionBackwards).Length();
             totalBackwards += dBackwards;
-            entriesBackward[i] = new ArcPair( sample, totalBackwards );
+            entriesBackward[i] = new ArcPair( totalBackwards, sample );
+            prevPositionBackwards = newPosBackward;
         }
 
         for (int i = 0; i < entriesForward.Length; i++)
         {
             var item = entriesForward[i];
-            item.value /= totalForward;
+            item.key /= totalForward;
             arcLUT.Add( item.key, item.value );
 
             var itemBack = entriesBackward[i];
-            itemBack.value /= totalBackwards;
+            itemBack.key /= totalBackwards;
             arcLUTReverse.Add( itemBack.key, itemBack.value );
         }
     }
@@ -98,35 +100,37 @@ public class PathFollower : Component, IFixedUpdate
 
     private void FollowPathArc()
     {
-        t += Speed*sampleRate*TimeInfo.FixedDeltaTime;
+        s += Speed*sampleRate*TimeInfo.FixedDeltaTime;
         bool done = false;
-        if (t < 1f)
-        {  
-
-            float arc = FindArcStep(t,reverse ? arcLUTReverse  : arcLUT);
-            if (arc >= 1f)
-            { 
-                arc = 1f -0.001f;
-                done = true;
-            }
-
-
-            Vector2 newPos;
-            if (reverse) {
-                newPos = reversePathToFollow.FollowPathCatmullRom( arc ); 
-            } else
-            {
-                newPos = pathToFollow.FollowPathCatmullRom(arc);
-            }
-
-            var dir = (newPos-Transform.Position);
-            if (!done && dir.LengthSquared() > 0f)
-            {
-                dir.Normalize();
-                Transform.Rotation = 90f * Mathf.Deg2Rad + (float)Math.Atan2( dir.Y, dir.X );
-            }
-            Transform.Position = newPos;
+        if (s >= 1f)
+        {
+            s = 1f;
+            done = true;
         }
+        float arc = FindArcStep(s,reverse ? arcLUTReverse  : arcLUT);
+        if (arc >= 1f)
+        { 
+            arc = 1f -0.001f;
+        }
+
+        Debug.WriteLine( arc );
+
+        Vector2 newPos;
+        if (reverse) {
+            newPos = reversePathToFollow.FollowPathCatmullRom( arc ); 
+        } else
+        {
+            newPos = pathToFollow.FollowPathCatmullRom(arc);
+        }
+
+        var dir = (newPos-Transform.Position);
+        if (!done && dir.LengthSquared() > 0f)
+        {
+            dir.Normalize();
+            Transform.Rotation = 90f * Mathf.Deg2Rad + (float)Math.Atan2( dir.Y, dir.X );
+        }
+        Transform.Position = newPos;
+        
         if (done)
         {
             Done();
@@ -136,8 +140,8 @@ public class PathFollower : Component, IFixedUpdate
     private void Done()
     {
         reverse = !reverse;
-        t = 0f;
-        Debug.Write( $"Done; reverse: {reverse}" );
+        s = 0f;
+        Debug.WriteLine( "reverse" );
     }
 
     private float FindArcStep( float t, Dictionary<float,float> lut )
@@ -192,7 +196,7 @@ public class PathFollower : Component, IFixedUpdate
 
     public void Recalc()
     {
-        t = 0f;
+        s = 0f;
         BuildArcLUT();
     }
 

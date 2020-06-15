@@ -225,7 +225,7 @@ namespace UntitledGameAssignment
 
             pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/heart", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
 
-            var pathFollower = pF.AddComponent( ( j ) => new PathFollower(0.005f, j, 15f ) );
+            var pathFollower = pF.AddComponent( ( j ) => new PathFollower(0.005f, j, 18f ) );
 
             //AddObjectsToEitherSide(obj, recursion: 2 );
 

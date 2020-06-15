@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/small_woodencrate.png</SourceFile>
-  <SourceTime>2020-06-08T19:02:05.6917809+02:00</SourceTime>
+  <SourceTime>2020-06-15T11:50:26.8779654+02:00</SourceTime>
   <DestFile>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/bin/Windows/Content/Sprites/small_woodencrate.xnb</DestFile>
-  <DestTime>2020-06-08T19:02:25.4413343+02:00</DestTime>
+  <DestTime>2020-06-15T11:50:41.2175569+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
