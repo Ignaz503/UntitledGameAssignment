@@ -4,22 +4,30 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Arial.spritefont</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/PolygonShader.fx</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/bullet.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/cursor.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/heart.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerlegl.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerlegr.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playershoulders.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/shield.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/small_woodencrate.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/spikeball.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/tank_gun.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/tank_treads.png</File>
-    <File>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/WhiteSquare.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Arial.spritefont</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/PolygonShader.fx</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/bullet.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/cursor.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/firefly.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/heart.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerleg.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerlegl.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerlegr.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playershoulders.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/shield.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/small_woodencrate.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/spikeball.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/swirl.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/tank_gun.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/tank_treads.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/wall.png</File>
+    <File>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/WhiteSquare.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
