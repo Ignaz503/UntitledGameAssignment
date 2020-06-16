@@ -215,35 +215,35 @@ namespace UntitledGameAssignment
             var p2_treads = new TankTreads(p2.Transform.Position, SortingLayer.EntitesSubLayer(1), p2, TankTreads.tint.white, "Sprites/tank_treads");
             p2.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p2.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
-            var h2 = p2.AddComponent(j => new Health(2, j));
+            var h2 = p2.AddComponent(j => new Health(5, j));
             h2.OnDeath += OnDeath;
 
             var p3 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-110, 90)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
             var p3_treads = new TankTreads(p3.Transform.Position, SortingLayer.EntitesSubLayer(1), p3, TankTreads.tint.white, "Sprites/tank_treads");
             p3.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p3.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
-            var h3 = p3.AddComponent(j => new Health(2, j));
+            var h3 = p3.AddComponent(j => new Health(5, j));
             h3.OnDeath += OnDeath;
 
             var p4 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-110, 150)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
             var p4_treads = new TankTreads(p4.Transform.Position, SortingLayer.EntitesSubLayer(1), p4, TankTreads.tint.white, "Sprites/tank_treads");
             p4.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p4.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
-            var h4 = p4.AddComponent(j => new Health(2, j));
+            var h4 = p4.AddComponent(j => new Health(5, j));
             h4.OnDeath += OnDeath;
 
             var p5 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-170, 90)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.red, "Sprites/tank_gun");
             var p5_treads = new TankTreads(p5.Transform.Position, SortingLayer.EntitesSubLayer(1), p5, TankTreads.tint.red, "Sprites/tank_treads");
             p5.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p5.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
-            var h5 = p5.AddComponent(j => new Health(5, j));
+            var h5 = p5.AddComponent(j => new Health(10, j));
             h5.OnDeath += OnDeath;
 
             var p6 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-170, 150)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
             var p6_treads = new TankTreads(p6.Transform.Position, SortingLayer.EntitesSubLayer(1), p6, TankTreads.tint.white, "Sprites/tank_treads");
             p6.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p6.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
-            var h6 = p6.AddComponent(j => new Health(2, j));
+            var h6 = p6.AddComponent(j => new Health(5, j));
             h6.OnDeath += OnDeath;
 
             var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
@@ -286,7 +286,7 @@ namespace UntitledGameAssignment
             return player;
         }
 
-        private void AddShieldToObject( GameObject @object,float speed,float dir, int recursion)
+        private void AddGoalChildren( GameObject @object,float speed,float dir, int recursion)
         {
 
             if (recursion == 0)
@@ -305,7 +305,7 @@ namespace UntitledGameAssignment
             shield.Transform.LocalPosition = new Vector2( 0f, 40f );
             shield.Transform.Scale = new Vector2( 0.75f, 0.75f );
             var ren =shield.AddComponent(j=> new SpriteRenderer( "Sprites/shield", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
-            AddShieldToObject( shield, speed*2f, -dir, recursion);
+            AddGoalChildren( shield, speed*2f, -dir, recursion);
         }
           
 
@@ -346,7 +346,7 @@ namespace UntitledGameAssignment
 
             goal.OnPlayerReachedGoal += ShowWinScreen;
 
-            AddShieldToObject(obj, 1f, 1f, 4);
+            AddGoalChildren(obj, 1f, 1f, 4);
         }
 
         void CreateStart()
