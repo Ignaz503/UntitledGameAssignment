@@ -31,7 +31,7 @@ public class MouseLocationBasedRotationController : Component, IUpdate
         Vector2 dir = (Target - Transform.Position);
         dir.Normalize();
 
-        rot = (VectorMath.Angle(dir.X, dir.Y) + 90.0f) / 180.0f * (float)Math.PI;
+        rot = VectorMath.Angle(dir.X, dir.Y) / 180.0f * (float)Math.PI;
         Transform.Rotation = rot;
 
         //Debug.Log(Target.X + ", " + Target.Y + ": " + Transform.Rotation);

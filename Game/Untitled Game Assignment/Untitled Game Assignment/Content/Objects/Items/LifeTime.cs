@@ -27,5 +27,10 @@ public class LifeTime : Component, IUpdate
             this.GameObject.Destroy();
         }
     }
+
+    public float Step()
+    {
+        return (float)(TimeToDie - TimeInfo.timeStep.TotalGameTime.TotalSeconds);
+    }
 }
 

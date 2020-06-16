@@ -64,12 +64,11 @@ public class GravPull : Component, IUpdate
 
         Direction.Normalize();
         Rb.AddImpulse(Direction, Force);
-        
 
         if (Rotate)
         {
-            float rot = (VectorMath.Angle(Direction.X, Direction.Y) + 90.0f) / 180.0f * (float)Math.PI;
-            Transform.RotationVelocity += -(Transform.Rotation + rot - 4.0f);
+            float rot = VectorMath.Angle(Direction.X, Direction.Y) / 180.0f * (float)Math.PI;
+            Transform.RotationVelocity += (rot - Transform.Rotation) - (float)Math.PI;
         }
     }
 }
