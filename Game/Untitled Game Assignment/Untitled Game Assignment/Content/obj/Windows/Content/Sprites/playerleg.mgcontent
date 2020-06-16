@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerleg.png</SourceFile>
-  <SourceTime>2020-06-15T17:10:13.6521303+02:00</SourceTime>
-  <DestFile>C:/Users/lukes/OneDrive/Documents/GitHub/UntitledGameAssignment/Game/Untitled Game Assignment/Untitled Game Assignment/Content/bin/Windows/Content/Sprites/playerleg.xnb</DestFile>
-  <DestTime>2020-06-15T17:16:26.566304+02:00</DestTime>
+  <SourceFile>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/Sprites/playerleg.png</SourceFile>
+  <SourceTime>2020-06-15T17:23:47.7190391+02:00</SourceTime>
+  <DestFile>D:/studium/SimAndAnim/NewGit/Game/Untitled Game Assignment/Untitled Game Assignment/Content/bin/Windows/Content/Sprites/playerleg.xnb</DestFile>
+  <DestTime>2020-06-15T17:25:18.2745856+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
