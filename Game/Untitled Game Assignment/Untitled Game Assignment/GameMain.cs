@@ -188,47 +188,78 @@ namespace UntitledGameAssignment
             var pH = player.AddComponent(obj => new Health(2,obj));
             pH.OnDeath += OnDeath;
 
-
-            var p2 = new TempPlayer(
-                Camera.Active.ScreenToWorld(camcenter + Vector2.One*50f),
-                null,
-                SortingLayer.EntitesSubLayer(1),
-                TempPlayer.tint.white,
-                "Sprites/tank_gun",
-                Keys.Y,
-                Keys.X);
+            //Tank "prefab"
+            var p2 = new TempPlayer( Camera.Active.ScreenToWorld(camcenter + Vector2.One*120f), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
             var p2_treads = new TankTreads(p2.Transform.Position, SortingLayer.EntitesSubLayer(1), p2, TankTreads.tint.white, "Sprites/tank_treads");
+            p2.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
+            p2.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
+            var h2 = p2.AddComponent(j => new Health(2, j));
+            h2.OnDeath += OnDeath;
 
-            var h = p2.AddComponent( j => new Health( 2, j ) );
-            h.OnDeath += OnDeath;
+            var p3 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-110, 90)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
+            var p3_treads = new TankTreads(p3.Transform.Position, SortingLayer.EntitesSubLayer(1), p3, TankTreads.tint.white, "Sprites/tank_treads");
+            p3.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
+            p3.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
+            var h3 = p3.AddComponent(j => new Health(2, j));
+            h3.OnDeath += OnDeath;
 
-            //////temp, will move this
-            //var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
-            //spike.AddComponent( ( obj ) => new GravPull( obj, tankplayer, mass: 0.5f, effectiveRadius: 300.0f, rotate: true ) );
-            
-            p2.AddComponent( (obj) => new RigidBody2D( obj, 1.5f, SortingLayer.Entities ) );
-            p2.AddComponent( (obj) => new BoxCollider( player.SpriteRen, obj, SortingLayer.Entities ) );
+            var p4 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-110, 150)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
+            var p4_treads = new TankTreads(p4.Transform.Position, SortingLayer.EntitesSubLayer(1), p4, TankTreads.tint.white, "Sprites/tank_treads");
+            p4.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
+            p4.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
+            var h4 = p4.AddComponent(j => new Health(2, j));
+            h4.OnDeath += OnDeath;
+
+            var p5 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-170, 90)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.red, "Sprites/tank_gun");
+            var p5_treads = new TankTreads(p5.Transform.Position, SortingLayer.EntitesSubLayer(1), p5, TankTreads.tint.red, "Sprites/tank_treads");
+            p5.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
+            p5.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
+            var h5 = p5.AddComponent(j => new Health(5, j));
+            h5.OnDeath += OnDeath;
+
+            var p6 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-170, 150)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
+            var p6_treads = new TankTreads(p6.Transform.Position, SortingLayer.EntitesSubLayer(1), p6, TankTreads.tint.white, "Sprites/tank_treads");
+            p6.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
+            p6.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
+            var h6 = p6.AddComponent(j => new Health(2, j));
+            h6.OnDeath += OnDeath;
 
             var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
             spike.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 300.0f, rotate: true ) );
 
-            var wall1 = new Wall(camcenter + Vector2.UnitX * -20, (float)Math.PI);
-            wall1.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
-            var wall2 = new Wall(camcenter + Vector2.UnitX * -84, (float)Math.PI * 2);
-            wall2.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
-            var wall3 = new Wall(camcenter + Vector2.UnitX * -20 + Vector2.UnitY * -64, (float)Math.PI);
-            wall3.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
-            var wall4 = new Wall(camcenter + Vector2.UnitX * -84 + Vector2.UnitY * -64, (float)Math.PI * 2);
-            wall4.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var w1 = new Wall(camcenter + Vector2.UnitX * -20, (float)Math.PI);
+            w1.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var w2 = new Wall(camcenter + Vector2.UnitX * -104, (float)Math.PI * 2);
+            w2.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var w3 = new Wall(camcenter + Vector2.UnitX * -20 + Vector2.UnitY * -64, (float)Math.PI);
+            w3.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
 
-            var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
+            var w4 = new Wall(camcenter + Vector2.UnitX * -104 + Vector2.UnitY * -64, (float)Math.PI * 2);
+            w4.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var w5 = new Wall(camcenter + Vector2.UnitX * -136 + Vector2.UnitY * -96, (float)Math.PI * 2);
+            w5.Transform.Rotation = (float)Math.PI * 0.5f;
+            w5.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var w6 = new Wall(camcenter + Vector2.UnitX * -136 + Vector2.UnitY * 32, (float)Math.PI * 2);
+            w6.Transform.Rotation = (float)Math.PI * 0.5f;
+            w6.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+
+            var w7 = new Wall(camcenter + Vector2.UnitX * -20 + Vector2.UnitY * 32, (float)Math.PI * 2);
+            w7.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+            var w8 = new Wall(camcenter + Vector2.UnitX * 12 + Vector2.UnitY * 64, (float)Math.PI * 2);
+            w8.Transform.Rotation = (float)Math.PI * 0.5f;
+            w8.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+
+            var w9 = new Wall(camcenter + Vector2.UnitX * -236 + Vector2.UnitY * 64, (float)Math.PI * 2);
+            w9.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
+
+            /*var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
             red_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
 
             var blue_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(500, 80)), heal: player, Color.Blue);
             blue_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
             
             var green_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(200, 300)), heal: player, Color.Green);
-            green_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
+            green_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );*/
 
             return player;
         }
@@ -305,7 +336,7 @@ namespace UntitledGameAssignment
 
             start.Load();
 
-            obj.Transform.Position = NDCToWorld(Vector2.One * .5f);
+            obj.Transform.Position = NDCToWorld(Vector2.One * .45f);
 
             obj.AddComponent(j => new TextRenderer("Welcome to Tank McShooty\n\nPress -ENTER- to start", Color.Black, SortingLayer.UI, j));
         }
