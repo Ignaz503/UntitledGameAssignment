@@ -110,8 +110,6 @@ namespace UntitledGameAssignment
             //basic
             CreateAdaptiveUpdateRateChanger();
 
-            // TODO: use this.Content to load your game content here
-
            var player = LoadPlayers();
 
             //LoadTestGrid();
@@ -142,6 +140,8 @@ namespace UntitledGameAssignment
 
             SetupCamera(player);
 
+
+            CreateStart();
         }
 
         private void SetupCamera(GameObject player)
@@ -279,21 +279,35 @@ namespace UntitledGameAssignment
             winText.AddComponent( j => new TextRenderer( "You Won!", Color.Black, SortingLayer.UI, j ) );
         }
 
-        void CreateGoal(Vector2 ndcLocation, GameObject player) 
+        void CreateGoal(Vector2 ndcLocation, GameObject player)
         {
             var obj = new GameObject();
             obj.Name = "Goal";
-            obj.Transform.Position = NDCToWorld( ndcLocation );
-            var ren = obj.AddComponent(j=> new SpriteRenderer( "Sprites/shield", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+            obj.Transform.Position = NDCToWorld(ndcLocation);
+            var ren = obj.AddComponent(j => new SpriteRenderer("Sprites/shield", Color.White, SortingLayer.EntitesSubLayer(1), j));
 
 
-            var col = obj.AddComponent( ( j ) => new BoxCollider( ren, j, SortingLayer.Entities ) );
+            var col = obj.AddComponent((j) => new BoxCollider(ren, j, SortingLayer.Entities));
 
-            var goal = obj.AddComponent( j => new Goal( player, col, j ) );
+            var goal = obj.AddComponent(j => new Goal(player, col, j));
 
             goal.OnPlayerReachedGoal += ShowWinScreen;
 
-            AddShieldToObject( obj, 1f, 1f, 4 );
+            AddShieldToObject(obj, 1f, 1f, 4);
+        }
+
+        void CreateStart()
+        {
+            var obj = new GameObject();
+            obj.Name = "Start";
+
+            var start = obj.AddComponent(j => new StartController( obj ));
+
+            start.Load();
+
+            obj.Transform.Position = NDCToWorld(Vector2.One * .5f);
+
+            obj.AddComponent(j => new TextRenderer("Welcome to Tank McShooty\n\nPress -ENTER- to start", Color.Black, SortingLayer.UI, j));
         }
 
 
