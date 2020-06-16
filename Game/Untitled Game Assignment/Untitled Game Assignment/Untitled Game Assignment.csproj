@@ -54,7 +54,7 @@
     <Compile Include="Content\Objects\DestuctableBox\DestructableBox.cs" />
     <Compile Include="Content\Objects\DestuctableBox\Helper\Shatter.cs" />
     <Compile Include="Content\Objects\Field\Particle.cs" />
-    <Compile Include="Content\Objects\Field\RepulseField.cs" />
+    <Compile Include="Content\Objects\Field\VectorField.cs" />
     <Compile Include="Content\Objects\Field\SpawnParticles.cs" />
     <Compile Include="Content\Objects\Items\Bullet.cs" />
     <Compile Include="Content\Objects\Items\LifeTime.cs" />

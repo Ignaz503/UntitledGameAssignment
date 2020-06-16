@@ -458,7 +458,7 @@ namespace UntitledGameAssignment.Core
         {
             //TODO: move this maybe, although it does work here, just doesnt fit in this method
             this.Position += this.Velocity;
-            this.Rotation += this.RotationVelocity;
+            this.LocalRotation = (this.LocalRotation + this.RotationVelocity) % (2.0f * (float)Math.PI);
 
             if (this != Scene.Current.Root && !GameObject.IsEnabled)
             {

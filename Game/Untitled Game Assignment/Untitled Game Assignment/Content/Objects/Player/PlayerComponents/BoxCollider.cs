@@ -6,6 +6,7 @@ using UntitledGameAssignment.Core.Components;
 using UntitledGameAssignment.Core.GameObjects;
 using UntitledGameAssignment.Core.SceneGraph;
 using Util.CustomDebug;
+using Util.CustomMath;
 using Util.FrameTimeInfo;
 using Util.SortingLayers;
 
@@ -24,6 +25,18 @@ public class BoxCollider : Component, IUpdate
     public Rectangle BoundingBox;
     public List<GameObject> Collisions { get; private set; }
 
+    /// <summary>
+    /// Adds collider component to gameobject, allowing for collision detection
+    /// </summary>
+    /// <param name="spriteRen"></param>
+    ///     Sprite renderer, needed for bounding box
+    /// <param name="obj"></param>
+    /// <param name="layer"></param>
+    ///     SortingLayer of bounding box
+    /// <param name="neglect"></param>
+    ///     List of SortingLayers to ignore during collision detection
+    /// <param name="visualize"></param>
+    ///     generates fireflies at corners of bounding box
     public BoxCollider( SpriteRenderer spriteRen, GameObject obj, SortingLayer layer, List<SortingLayer> neglect = null, bool visualize = false ) : base( obj )
     {
         Layer = layer;
@@ -45,28 +58,66 @@ public class BoxCollider : Component, IUpdate
     public override void OnDestroy()
     {}
 
+    /// <summary>
+    /// Transform point based on gameobject rotation
+    /// </summary>
+    Vector2 RotTransform(Vector2 vec, Vector2 origin)
+    {
+        Vector2 trans = vec - origin;
+        double rad = (57.2957795948f + (Transform.Rotation - 1.0f) * 180.0f / Math.PI) * Math.PI / 180.0f;
+        Vector2 rot = new Vector2(trans.X * (float)Math.Cos(rad) - trans.Y * (float)Math.Sin(rad),
+                                  trans.X * (float)Math.Sin(rad) + trans.Y * (float)Math.Cos(rad));
+        return rot + origin;
+    }
+
+    /// <summary>
+    /// Axis-aligned bounding box around gameobject, takes rotation into consideration
+    /// </summary>
+    Rectangle MinXY()
+    {
+        Vector2 L0 = Transform.Position - SpriteRen.Sprite.Bounds.Size.ToVector2() / 2.0f;
+        Vector2 R0 = L0 + SpriteRen.Sprite.Bounds.Size.ToVector2();
+        Vector2 T0 = L0 + new Vector2(R0.X - L0.X, 0.0f);
+        Vector2 B0 = L0 + new Vector2(0.0f, R0.Y - L0.Y);
+
+        Vector2 L = RotTransform(L0, Transform.Position);
+        Vector2 R = RotTransform(R0, Transform.Position);
+        Vector2 T = RotTransform(T0, Transform.Position);
+        Vector2 B = RotTransform(B0, Transform.Position);
+
+        float minx = Math.Min(L.X, Math.Min(R.X, Math.Min(T.X, B.X)));
+        float maxx = Math.Max(L.X, Math.Max(R.X, Math.Max(T.X, B.X)));
+        float miny = Math.Min(L.Y, Math.Min(R.Y, Math.Min(T.Y, B.Y)));
+        float maxy = Math.Max(L.Y, Math.Max(R.Y, Math.Max(T.Y, B.Y)));
+
+        Rectangle rect = new Rectangle(new Vector2(minx, miny).ToPoint(), new Vector2(maxx - minx, maxy - miny).ToPoint());
+        return rect;
+    }
+
     public void Update()
     {
-        BoundingBox = new Rectangle((this.GameObject.Transform.Position - SpriteRen.Sprite.Bounds.Size.ToVector2() / 2.0f).ToPoint(), SpriteRen.Sprite.Bounds.Size);
+        //BoundingBox = new Rectangle((Transform.Position - SpriteRen.Sprite.Bounds.Size.ToVector2() / 2.0f).ToPoint(), SpriteRen.Sprite.Bounds.Size);
+        BoundingBox = MinXY();
+
         Collisions.Clear();
         Collide();
         UpdateVelocity();
 
         if (TimeInfo.timeStep.TotalGameTime.TotalSeconds > ShowTime && Visualize)
         {
-            Particle Lcoll = new Particle(new Vector2(BoundingBox.Left, BoundingBox.Center.Y));
+            Particle Lcoll = new Particle(new Vector2(BoundingBox.Left, BoundingBox.Top));
             Lcoll.AddComponent((obj) => new LifeTime(obj, 0.0001f));
             Scene.Current.Instantiate(Lcoll);
 
-            Particle Rcoll = new Particle(new Vector2(BoundingBox.Right, BoundingBox.Center.Y));
+            Particle Rcoll = new Particle(new Vector2(BoundingBox.Right, BoundingBox.Bottom));
             Rcoll.AddComponent((obj) => new LifeTime(obj, 0.0001f));
             Scene.Current.Instantiate(Rcoll);
 
-            Particle Tcoll = new Particle(new Vector2(BoundingBox.Center.X, BoundingBox.Top));
+            Particle Tcoll = new Particle(new Vector2(BoundingBox.Right, BoundingBox.Top));
             Tcoll.AddComponent((obj) => new LifeTime(obj, 0.0001f));
             Scene.Current.Instantiate(Tcoll);
 
-            Particle Bcoll = new Particle(new Vector2(BoundingBox.Center.X, BoundingBox.Bottom));
+            Particle Bcoll = new Particle(new Vector2(BoundingBox.Left, BoundingBox.Bottom));
             Bcoll.AddComponent((obj) => new LifeTime(obj, 0.0001f));
             Scene.Current.Instantiate(Bcoll);
 
@@ -109,7 +160,7 @@ public class BoxCollider : Component, IUpdate
             //Add impulses if applicable
             if (opponent != null && self != null)
             {
-                // Add angular momentum to colliding RigidBody
+                // Add angular momentum to colliding RigidBody at center of bounding box edge
                 if (Transform.Velocity.X > 0 && this.IsTouchingLeft(query))
                 {
                     collisionPoint = new Vector2(BoundingBox.Left, BoundingBox.Center.Y);

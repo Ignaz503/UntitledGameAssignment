@@ -26,6 +26,13 @@ public class RigidBody2D : Component, IUpdate
     public float Torque;
     public bool IsKinematic { get; private set; }
 
+    /// <summary>
+    /// RigidBody component, which allows physics-based linear and angular velocity
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="mass"></param>
+    /// <param name="drag"></param>
+    /// <param name="isKinematic"></param>
     public RigidBody2D( GameObject obj, float mass, float drag = 0.9f, bool isKinematic = true ) : base( obj )
     {
         Drag = drag;

@@ -13,13 +13,15 @@ public class SpawnParticles : Component, IUpdate
 {
     double TimeToSpawn;
     double Last;
+    float Life;
     int Dist;
     string FilePath;
 
-    public SpawnParticles( GameObject obj, int dist, double timeToSpawn, string filePath ) : base( obj )
+    public SpawnParticles( GameObject obj, int dist, double timeToSpawn, string filePath, float lifeTime = 1.0f ) : base( obj )
     {
         TimeToSpawn = timeToSpawn;
         FilePath = filePath;
+        Life = lifeTime;
         Dist = dist;
         Last = 0.0f;
     }
@@ -38,7 +40,7 @@ public class SpawnParticles : Component, IUpdate
             float y = rand.Next(-Dist, Dist);
 
             Particle firefly = new Particle(Transform.Position + new Vector2((float)x, (float)y), FilePath);
-            firefly.AddComponent((obj) => new LifeTime(obj, 1.0f));
+            firefly.AddComponent((obj) => new LifeTime(obj, Life));
             Scene.Current.Instantiate(firefly);
         }
     }

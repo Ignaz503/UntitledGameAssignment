@@ -132,6 +132,15 @@ namespace UntitledGameAssignment
             obj.AddComponent( j => new UpdateRateAdapter( Keys.D9, Keys.D0, j ) );
         }
 
+        /// <summary>
+        /// The return value of this function is the slope of the vector field function V(X,t)
+        /// </summary>
+        Func<Vector2, double, Vector2> Eval = delegate (Vector2 vec, double t)
+        {
+            return new Vector2((float)Math.Cos(vec.X + 2 * vec.Y), (float)Math.Sin(vec.X - 2 * vec.Y)) * (float)t;
+            //return new Vector2(-(1.0f / vec.Y), 1.0f/(vec.X / 2.0f)) * (float)t;
+        };
+
         private GameObject LoadPlayers()
         {
             Vector2 camcenter = VirtualViewport.Bounds.Center.ToVector2();
@@ -149,9 +158,9 @@ namespace UntitledGameAssignment
             player.AddComponent( ( obj ) => new ShootScript( obj, 15.0f ) );
             player.AddComponent( ( obj ) => new RigidBody2D( obj, 50.0f, SortingLayer.Entities ) );
             player.AddComponent( ( obj ) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities + 1 ) );
-            
-            player.AddComponent( ( obj ) => new RepulseField( obj, 0.01f, 1.0f, true ) );;
-            player.AddComponent( ( obj ) => new SpawnParticles( obj, 150, 0.5f, "Sprites/firefly" ) );
+
+            player.AddComponent( ( obj ) => new VectorField( obj, Eval, 0.005f, 0.1f, true ) );;
+            player.AddComponent( ( obj ) => new SpawnParticles( obj, 200, 0.75f, "Sprites/firefly", 1.0f ) );
 
             var p2 = new TempPlayer(
                 Camera.Active.ScreenToWorld(camcenter + Vector2.One*50f),
@@ -168,6 +177,7 @@ namespace UntitledGameAssignment
             //////temp, will move this
             //var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
             //spike.AddComponent( ( obj ) => new GravPull( obj, tankplayer, mass: 0.5f, effectiveRadius: 300.0f, rotate: true ) );
+            
             p2.AddComponent( (obj) => new RigidBody2D( obj, 1.5f, SortingLayer.Entities ) );
             p2.AddComponent( (obj) => new BoxCollider( player.SpriteRen, obj, SortingLayer.Entities ) );
 
