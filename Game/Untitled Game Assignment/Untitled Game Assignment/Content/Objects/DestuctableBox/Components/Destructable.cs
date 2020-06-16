@@ -23,16 +23,15 @@ class Destructable : Component
 {
     BoxCollider ownCollider;
     SpriteRenderer renderer;
-    TempPlayer player;
     private bool isShattered;
-
+    DissipateInfo info;
     Rect TransformRect => new Rect( Transform.Position, renderer.Sprite.Bounds.Size.ToVector2() );
 
-    public Destructable(BoxCollider collider, SpriteRenderer r, TempPlayer player,GameObject obj ) : base( obj )
+    public Destructable(BoxCollider collider, SpriteRenderer r, DissipateInfo info, GameObject obj) : base( obj )
     {
         ownCollider = collider ?? throw new ArgumentNullException( nameof( collider ) );
         renderer = r ?? throw new ArgumentNullException( nameof( r ) );
-        this.player = player ?? throw new ArgumentNullException( nameof( player ) );
+        this.info = info;
     }
 
     public void OnHit(BoxCollider other)
@@ -88,15 +87,13 @@ class Destructable : Component
 
         }
 
-        Shatter.ShatterBox( r, seedPoints, pos, texSize, originaltexture, hitPosition, renderer.Layer, rng );
+        Shatter.ShatterBox( r, seedPoints, pos, texSize, originaltexture, hitPosition, renderer.Layer, Transform.Scale,info, rng );
 
         this.GameObject.Destroy();
     }
 
     private void SplinterFromTop( Vector2 hitPosition )
     {
-        Debug.WriteLine( "Splinter from top" );
-
         Rect totalRect = TransformRect;
         
         var seedPointRect = new Rect(totalRect.TopLeft.X,totalRect.TopLeft.Y,totalRect.BottomRight.X,totalRect.Center.Y);
@@ -106,8 +103,6 @@ class Destructable : Component
 
     private void SplinterFromRight( Vector2 hitPosition )
     {
-        Debug.WriteLine( "Spliter from right" );
-
         Rect totalRect = TransformRect;
 
         var seedPointRect = new Rect(totalRect.Center.X,totalRect.TopLeft.Y,totalRect.BottomRight.X,totalRect.BottomRight.Y);
@@ -117,8 +112,6 @@ class Destructable : Component
 
     private void SplinterFromLeft( Vector2 hitPosition )
     {
-        Debug.WriteLine( "Splinter from left" );
-
         Rect totalRect = TransformRect;
 
         var seedPointRect = new Rect(totalRect.TopLeft.X,totalRect.TopLeft.Y,totalRect.Center.X,totalRect.BottomRight.Y);
@@ -128,8 +121,6 @@ class Destructable : Component
 
     private void SplinterFromBottom( Vector2 hitPosition )
     {
-        Debug.WriteLine( "Splinter from bottom" );
-
         Rect totalRect = TransformRect;
 
         var seedPointRect = new Rect(totalRect.TopLeft.X,totalRect.Center.Y,totalRect.BottomRight.X,totalRect.BottomRight.Y);
@@ -140,7 +131,6 @@ class Destructable : Component
     public override void OnDestroy()
     {
         ownCollider = null;
-        player = null;
         renderer = null;
     }
 }

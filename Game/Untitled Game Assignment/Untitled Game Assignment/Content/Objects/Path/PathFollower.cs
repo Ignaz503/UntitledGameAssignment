@@ -63,6 +63,7 @@ public class PathFollower : Component, IFixedUpdate
         float totalBackwards = 0f;
         Vector2 prevPositionBackwards = reversePathToFollow.FollowPathCatmullRom(0f);
 
+        //sample path at ts and calculate chord length used as key to index into whne trying to find orignal T agian
         for (int i = 0; i < iter; i++)
         {
             float sample = i * sampleRate;
@@ -139,7 +140,6 @@ public class PathFollower : Component, IFixedUpdate
     {
         reverse = !reverse;
         s = 0f;
-        Debug.WriteLine( "reverse" );
     }
 
     private float FindArcStep( float t, Dictionary<float,float> lut )

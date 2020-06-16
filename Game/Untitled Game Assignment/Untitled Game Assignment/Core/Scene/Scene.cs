@@ -38,7 +38,8 @@ namespace UntitledGameAssignment.Core.SceneGraph
         /// <param name="newObject"></param>
         public void Instantiate(GameObject newObject)
         {
-            gameObjects.Add( newObject );
+            if(!gameObjects.Contains(newObject))
+                gameObjects.Add( newObject );
         }
 
         /// <summary>

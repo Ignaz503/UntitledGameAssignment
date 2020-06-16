@@ -39,6 +39,13 @@ public class BulletBehaviour : Component, IUpdate
                     if (collider is DestructableBox)
                     {
                         collider.GetComponent<Destructable>().OnHit(GameObject.GetComponent<BoxCollider>());
+                        this.GameObject.Destroy();
+                    }
+
+                    var h = collider.GetComponent<Health>();
+                    if(h != null)
+                    {
+                        h.Hit(this);
                     }
 
                     //collider.Destroy();
