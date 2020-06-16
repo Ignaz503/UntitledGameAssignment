@@ -40,7 +40,6 @@ class StartController : Component, IUpdate
         objects = Scene.Current.gameObjects;
         foreach (GameObject g in objects)
         {
-            Debug.Log(g.Name);
             if (g.Name != ("Start"))
                 g.Disable();
         }
