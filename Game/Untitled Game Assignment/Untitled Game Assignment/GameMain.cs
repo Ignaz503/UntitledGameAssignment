@@ -16,6 +16,7 @@ using UntitledGameAssignment.Core.GameObjects;
 using Util.SortingLayers;
 using Loyc.Geometry;
 using Util.CustomMath;
+using System.Net.NetworkInformation;
 
 namespace UntitledGameAssignment
 {
@@ -137,6 +138,8 @@ namespace UntitledGameAssignment
                 new Vector2(0.5f,0.1f)
             } );
 
+            CreateGoal( new Vector2( 0.6f, 0.6f ),player );
+
             SetupCamera(player);
 
         }
@@ -195,10 +198,6 @@ namespace UntitledGameAssignment
                 Keys.Y,
                 Keys.X);
             var p2_treads = new TankTreads(p2.Transform.Position, SortingLayer.EntitesSubLayer(1), p2, TankTreads.tint.white, "Sprites/tank_treads");
-
-
-
-            AddShieldToObject( p2, 1f, 1f, 4);
 
             var h = p2.AddComponent( j => new Health( 2, j ) );
             h.OnDeath += OnDeath;
@@ -269,6 +268,35 @@ namespace UntitledGameAssignment
             }
         }
 
+        void ShowWinScreen(Goal g, GameObject player) 
+        {
+            g.OnPlayerReachedGoal -= ShowWinScreen;
+            player.Destroy();
+
+            var winText = new GameObject();
+            winText.Transform.Position = NDCToWorld( Vector2.One * .5f );
+
+            winText.AddComponent( j => new TextRenderer( "You Won!", Color.Black, SortingLayer.UI, j ) );
+        }
+
+        void CreateGoal(Vector2 ndcLocation, GameObject player) 
+        {
+            var obj = new GameObject();
+            obj.Name = "Goal";
+            obj.Transform.Position = NDCToWorld( ndcLocation );
+            var ren = obj.AddComponent(j=> new SpriteRenderer( "Sprites/shield", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+
+
+            var col = obj.AddComponent( ( j ) => new BoxCollider( ren, j, SortingLayer.Entities ) );
+
+            var goal = obj.AddComponent( j => new Goal( player, col, j ) );
+
+            goal.OnPlayerReachedGoal += ShowWinScreen;
+
+            AddShieldToObject( obj, 1f, 1f, 4 );
+        }
+
+
         Vector2 NDCToWorld( Vector2 ndc ) 
         {
             var screenWidth = GraphicsDevice.Viewport.Width;
@@ -281,8 +309,9 @@ namespace UntitledGameAssignment
         /// yeah this shouldn't be here but waht evs
         /// </summary>
         /// <param name="obj">the GO that died</param>
-        void OnDeath(GameObject obj ) 
+        void OnDeath(Health h, GameObject obj ) 
         {
+            h.OnDeath -= OnDeath;
             obj.Destroy();
         }
 

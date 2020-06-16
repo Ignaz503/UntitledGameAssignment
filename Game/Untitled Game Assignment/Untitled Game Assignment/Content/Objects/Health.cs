@@ -8,7 +8,7 @@ using UntitledGameAssignment.Core.GameObjects;
 
 class Health : Component
 {
-    public event Action<GameObject>OnDeath;
+    public event Action<Health,GameObject>OnDeath;
     int maxHealth;
     int currentHitCount;
 
@@ -25,7 +25,7 @@ class Health : Component
         {
             currentHitCount = value;
             if (currentHitCount >= maxHealth)
-                OnDeath?.Invoke( this.GameObject );
+                OnDeath?.Invoke(this, this.GameObject );
         }
     }
 

@@ -60,6 +60,7 @@
     <Compile Include="Content\Objects\Items\Bullet.cs" />
     <Compile Include="Content\Objects\Items\LifeTime.cs" />
     <Compile Include="Content\Objects\Items\Wall.cs" />
+    <Compile Include="Content\Objects\Other\Goal.cs" />
     <Compile Include="Content\Objects\Other\TankShoot.cs" />
     <Compile Include="Content\Objects\Path\Path.cs" />
     <Compile Include="Content\Objects\Path\PathCreator.cs" />
