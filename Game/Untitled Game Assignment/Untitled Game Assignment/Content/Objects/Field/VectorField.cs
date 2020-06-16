@@ -11,14 +11,14 @@ using UntitledGameAssignment.Core.SceneGraph;
 using Util.SortingLayers;
 using Loyc.Geometry;
 
-public class RepulseField: Component, IUpdate
+public class VectorField: Component, IUpdate
 {
     float Scale;
     float Step;
     bool CursorMode;
     Func<Vector2, double, Vector2> Eval;
 
-    public RepulseField( GameObject obj, Func<Vector2, double, Vector2> eval, float scale = 1.0f, float step = 0.1f, bool cursorMode = false ) : base( obj )
+    public VectorField( GameObject obj, Func<Vector2, double, Vector2> eval, float scale = 1.0f, float step = 0.1f, bool cursorMode = false ) : base( obj )
     {
         Scale = scale;
         Step = step;

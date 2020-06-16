@@ -159,7 +159,7 @@ namespace UntitledGameAssignment
             player.AddComponent( ( obj ) => new RigidBody2D( obj, 50.0f, SortingLayer.Entities ) );
             player.AddComponent( ( obj ) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities + 1 ) );
 
-            player.AddComponent( ( obj ) => new RepulseField( obj, Eval, 0.005f, 0.1f, true ) );;
+            player.AddComponent( ( obj ) => new VectorField( obj, Eval, 0.005f, 0.1f, true ) );;
             player.AddComponent( ( obj ) => new SpawnParticles( obj, 200, 0.75f, "Sprites/firefly", 1.0f ) );
 
             var p2 = new TempPlayer(
