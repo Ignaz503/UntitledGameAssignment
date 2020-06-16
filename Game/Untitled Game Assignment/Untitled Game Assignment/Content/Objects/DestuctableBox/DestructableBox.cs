@@ -16,8 +16,8 @@ public class DestructableBox : GameObject
     BoxCollider collider;
     public DestructableBox(Texture2D sprite, Vector2 position, DissipateInfo info):base()
     {
-        spriteRendrer = AddComponent(j => new SpriteRenderer( sprite, Color.White, SortingLayer.EntitesSubLayer(1), j) );
-        collider = AddComponent(j => new BoxCollider(spriteRendrer,j, SortingLayer.Entities));
+        spriteRendrer = AddComponent(j => new SpriteRenderer( sprite, Color.White, SortingLayer.EntitesSubLayer(2), j) );
+        collider = AddComponent(j => new BoxCollider(spriteRendrer,j, SortingLayer.EntitesSubLayer( 2 ) ) );
         AddComponent( ( obj ) => { return new Destructable( collider, spriteRendrer, info, obj ); } );
         Transform.Position = position;
     }

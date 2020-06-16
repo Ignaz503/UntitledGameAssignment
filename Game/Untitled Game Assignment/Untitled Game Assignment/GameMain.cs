@@ -116,12 +116,22 @@ namespace UntitledGameAssignment
 
             CreatePatrol(player, new Vector2[]
             {
-                new Vector2(0.1f,0.1f),
+                new Vector2(0.2f,0.1f),
                 new Vector2(0.3f,0.1f),
                 new Vector2(0.5f,0.25f),
                 new Vector2(0.75f,0.1f),
                 new Vector2(0.8f,0.8f),
-            } );
+            },.5f, Color.White);
+
+            CreatePatrol( player, new Vector2[]
+            {
+                new Vector2(-0.01f, 0.2f ),
+                new Vector2(0.05f,0.8f),
+                new Vector2(0.5f,1f),
+                new Vector2(0.75f,0.8f),
+                new Vector2(0.8f,0.8f),
+                new Vector2(1.0f,1.2f)
+            }, .2f, Color.Red ) ;
 
             CreateBoxes(new Vector2[] 
             {
@@ -164,6 +174,18 @@ namespace UntitledGameAssignment
             //return new Vector2(-(1.0f / vec.Y), 1.0f/(vec.X / 2.0f)) * (float)t;
         };
 
+        void OnPlayerDeath(Health h, GameObject player ) 
+        {
+            h.OnDeath -= OnPlayerDeath;
+            player.Destroy();
+
+            var winText = new GameObject();
+            winText.Transform.Position = NDCToWorld( Vector2.One * .5f );
+
+            winText.AddComponent( j => new TextRenderer( "Congratulations!\nYou Won A Free Death Cupon.\nRedeemed Immeadiately!\nYou died...", Color.Black, SortingLayer.UI, j ) );
+            winText.Transform.Scale = Vector2.One * 0.7f;
+        }
+
         private GameObject LoadPlayers()
         {
             Vector2 camcenter = VirtualViewport.Bounds.Center.ToVector2();
@@ -186,7 +208,7 @@ namespace UntitledGameAssignment
             player.AddComponent( ( obj ) => new SpawnParticles( obj, 200, 0.75f, "Sprites/firefly", 1.0f ) );
 
             var pH = player.AddComponent(obj => new Health(2,obj));
-            pH.OnDeath += OnDeath;
+            pH.OnDeath += OnPlayerDeath;
 
             //Tank "prefab"
             var p2 = new TempPlayer( Camera.Active.ScreenToWorld(camcenter + Vector2.One*120f), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
@@ -360,25 +382,25 @@ namespace UntitledGameAssignment
             obj.Destroy();
         }
 
-        void CreatePatrol(GameObject player, Vector2[] pointsNDC ) 
+        void CreatePatrol(GameObject player, Vector2[] pointsNDC, float shootFrequency, Color tint ) 
         {
             var pF = new GameObject();
             pF.Name = nameof( PathFollower );
 
             pF.Transform.Position = Camera.Active.ScreenToWorld( new Vector2( 500, 80 ) );
 
-            var sRenderer = pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/tank_treads", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+            var sRenderer = pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/tank_treads", tint, SortingLayer.EntitesSubLayer( 1 ), j ) );
 
             pF.AddComponent(( obj ) => new BoxCollider( sRenderer, obj, SortingLayer.Entities ) );
             var h = pF.AddComponent( j => new Health( 1, j ) );
 
             h.OnDeath += OnDeath;
 
-            pF.AddComponent( j => new TankShoot(player.Transform, j ) );
+            pF.AddComponent( j => new TankShoot(player.Transform, j,15f, shootFrequency ) );
 
             //var gun sprite
             var gun = new GameObject();
-            gun.AddComponent( j => new SpriteRenderer( "Sprites/tank_gun", Color.White, SortingLayer.EntitesSubLayer( 2 ), j ) );
+            gun.AddComponent( j => new SpriteRenderer( "Sprites/tank_gun", tint, SortingLayer.EntitesSubLayer( 2 ), j ) );
             gun.Transform.Parent = pF.Transform;
             gun.Transform.LocalPosition = Vector2.Zero;
 
