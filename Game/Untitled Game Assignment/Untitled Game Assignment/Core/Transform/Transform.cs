@@ -416,7 +416,11 @@ namespace UntitledGameAssignment.Core
         /// <returns>the world direction</returns>
         public Vector2 TransformDirection( Vector2 localDirection ) 
         {
-            return VectorMath.Rotate( localDirection, Rotation );
+            Vector2 p = TransformPoint(localPos+localDirection);
+            var dir = p - Position;
+            if (dir.LengthSquared() > 0f)
+                dir.Normalize();
+            return dir;
         }
 
         /// <summary>

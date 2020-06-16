@@ -115,7 +115,27 @@ namespace UntitledGameAssignment
 
             //LoadTestGrid();
 
-            LoadTestPathFollow();
+            CreatePatrol(player, new Vector2[]
+            {
+                new Vector2(0.1f,0.1f),
+                new Vector2(0.3f,0.1f),
+                new Vector2(0.5f,0.25f),
+                new Vector2(0.75f,0.1f),
+                new Vector2(0.8f,0.8f),
+            } );
+
+            CreateBoxes(new Vector2[] 
+            {
+                new Vector2(0.05f,0.05f),
+                new Vector2(0.13f,0.05f),
+                new Vector2(0.05f,0.165f),
+                new Vector2(.13f,0.165f),
+                new Vector2(0.05f,0.275f),
+                new Vector2(0.13f,0.275f),
+                new Vector2(0.05f,0.38f),
+                new Vector2(.13f,0.38f),
+                new Vector2(0.5f,0.1f)
+            } );
 
             SetupCamera(player);
 
@@ -172,7 +192,12 @@ namespace UntitledGameAssignment
                 Keys.X);
             var p2_treads = new TankTreads(p2.Transform.Position, SortingLayer.EntitesSubLayer(1), p2, TankTreads.tint.white, "Sprites/tank_treads");
 
+
+
             AddShieldToObject( p2, 1f, 1f, 4);
+
+            var h = p2.AddComponent( j => new Health( 2, j ) );
+            h.OnDeath += OnDeath;
 
             //////temp, will move this
             //var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
@@ -201,12 +226,6 @@ namespace UntitledGameAssignment
             
             var green_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(200, 300)), heal: player, Color.Green);
             green_heart.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 200.0f, rotate: false ) );
-			
-
-            var destructableBox = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(500, 300)),player);
-            var destructableBox1 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(130, 100)),player);
-            var destructableBox2 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(500, 80)),player);
-            var destructableBox3 = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),Camera.Active.ScreenToWorld(new Vector2(200, 300)),player);
 
             return player;
         }
@@ -232,31 +251,71 @@ namespace UntitledGameAssignment
             var ren =shield.AddComponent(j=> new SpriteRenderer( "Sprites/shield", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
             AddShieldToObject( shield, speed*2f, -dir, recursion);
         }
+          
 
-        private void LoadTestGrid()
+        void CreateBoxes(Vector2[] ndclocations) 
         {
-            GameObject obj = new GameObject();
-            var t = obj.AddComponent( ( j ) => new TestTileMap( Camera.Active.Origin - new Vector2(40,40)*.5f * 50f,40, j ) );
-            var at = AStarTileMap.CreateAStarMap( t );
+            var boxDissipate = new DissipateInfo(true);
+
+            for (int i = 0; i < ndclocations.Length; i++)
+            {
+                var p = NDCToWorld(ndclocations[i]);
+                var destructableBox = new DestructableBox(AssetManager.Load<Texture2D>("Sprites/small_woodencrate"),p,boxDissipate);
+                destructableBox.Transform.Scale = Vector2.One * 1.5f;
+            }
         }
 
-        void LoadTestPathFollow()
+        Vector2 NDCToWorld( Vector2 ndc ) 
         {
-            var obj = new GameObject();
-            obj.Transform.Position = Camera.Active.ScreenToWorld( Vector2.Zero );
+            var screenWidth = GraphicsDevice.Viewport.Width;
+            var screenHeight = GraphicsDevice.Viewport.Height;
 
+            return Camera.Active.ScreenToWorld(new Vector2(ndc.X*screenWidth,ndc.Y*screenHeight));
+        }
+
+        /// <summary>
+        /// yeah this shouldn't be here but waht evs
+        /// </summary>
+        /// <param name="obj">the GO that died</param>
+        void OnDeath(GameObject obj ) 
+        {
+            obj.Destroy();
+        }
+
+        void CreatePatrol(GameObject player, Vector2[] pointsNDC ) 
+        {
             var pF = new GameObject();
             pF.Name = nameof( PathFollower );
 
             pF.Transform.Position = Camera.Active.ScreenToWorld( new Vector2( 500, 80 ) );
 
-            pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/heart", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+            var sRenderer = pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/tank_treads", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+
+            pF.AddComponent(( obj ) => new BoxCollider( sRenderer, obj, SortingLayer.Entities ) );
+            var h = pF.AddComponent( j => new Health( 1, j ) );
+
+            h.OnDeath += OnDeath;
+
+            pF.AddComponent( j => new TankShoot(player.Transform, j ) );
+
+            //var gun sprite
+            var gun = new GameObject();
+            gun.AddComponent( j => new SpriteRenderer( "Sprites/tank_gun", Color.White, SortingLayer.EntitesSubLayer( 2 ), j ) );
+            gun.Transform.Parent = pF.Transform;
+            gun.Transform.LocalPosition = Vector2.Zero;
 
             var pathFollower = pF.AddComponent( ( j ) => new PathFollower(0.005f, j, 40f ) );
 
-            //AddObjectsToEitherSide(obj, recursion: 2 );
 
-            obj.AddComponent( ( j ) => new PathCreator(pathFollower,AssetManager.Load<Texture2D>( "Sprites/WhiteSquare" ), .5f, j ) );
+
+            var path = new Vector2[pointsNDC.Length];
+            for (int i = 0; i < pointsNDC.Length; i++)
+            {
+                var p = pointsNDC[i];
+                path[i] = NDCToWorld( p );
+            }
+
+            pathFollower.PathToFollow = new Path( path );
         }
 
         /// <summary>

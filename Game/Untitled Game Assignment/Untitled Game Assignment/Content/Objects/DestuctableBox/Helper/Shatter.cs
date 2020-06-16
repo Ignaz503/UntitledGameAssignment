@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using UntitledGameAssignment;
@@ -19,9 +20,9 @@ using Util.TextureHelper;
 
 public static class Shatter
 {
-    public static void ShatterBox(Rect bounds, Vector2[] seedPoints,Vector2 position, Vector2Int textureSize, Texture2D originalTexture, Vector2 hitPosition,SortingLayer sortingLayer, Random rng) 
+    public static void ShatterBox(Rect bounds, Vector2[] seedPoints,Vector2 position, Vector2Int textureSize, Texture2D originalTexture, Vector2 hitPosition,SortingLayer sortingLayer,Vector2 originalScale,DissipateInfo dissipateInfo, Random rng) 
     {
-        ThreadedDataRequestor.Instance.RequestData( ()=>MakePolygons(seedPoints,bounds), ( p ) => OnPolygonsRecieved( p, bounds, position, textureSize, originalTexture,hitPosition,sortingLayer, rng ));
+        ThreadedDataRequestor.Instance.RequestData( ()=>MakePolygons(seedPoints,bounds), ( p ) => OnPolygonsRecieved( p, bounds, position, textureSize, originalTexture,hitPosition,sortingLayer, originalScale, dissipateInfo, rng ));
     }
 
     static List<IPolygon> MakePolygons(Vector2[] seedPoints, Rect bounds) 
@@ -29,7 +30,7 @@ public static class Shatter
         return Voronoi.Shatter( seedPoints, bounds );
     }
 
-    static void OnPolygonsRecieved(object obj_polygons,Rect bounds,Vector2 positon, Vector2Int textureSize, Texture2D originalTexture,Vector2 hitPosition, SortingLayer sortingLayer, Random rng) 
+    static void OnPolygonsRecieved(object obj_polygons,Rect bounds,Vector2 positon, Vector2Int textureSize, Texture2D originalTexture,Vector2 hitPosition, SortingLayer sortingLayer,Vector2 originalScale,DissipateInfo dissipateInfo, Random rng) 
     {
         var polygons = obj_polygons as List<IPolygon>;
 
@@ -40,7 +41,7 @@ public static class Shatter
             var newTexture = new Texture2D(GameMain.Instance.GraphicsDevice,textureSize.X,textureSize.Y);
 
             float tDir = (float)rng.NextDouble();
-            ThreadedDataRequestor.Instance.RequestData(()=> GenerateTexture(poly,textureSize,newTexture,originalTexture.GetPixels(),bounds),(t)=>MakeGameobject(t,positon,hitPosition,sortingLayer,tDir,tForce));
+            ThreadedDataRequestor.Instance.RequestData(()=> GenerateTexture(poly,textureSize,newTexture,originalTexture.GetPixels(),bounds),(t)=>MakeGameobject(t,positon,hitPosition,sortingLayer,tDir,tForce,originalScale,dissipateInfo,rng));
         }
     }
 
@@ -78,14 +79,22 @@ public static class Shatter
         return newTexture;
     }
 
-    static void MakeGameobject( object obj_newTexture, Vector2 position, Vector2 hitPosition, SortingLayer sortingLayer,float tDir, float tForce) 
+    static void MakeGameobject( object obj_newTexture, Vector2 position, Vector2 hitPosition, SortingLayer sortingLayer,float tDir, float tForce, Vector2 originalScale, DissipateInfo dissipateInfo,Random rng) 
     {
         var newTexture = obj_newTexture as Texture2D;
 
         var gObj = new GameObject();
         gObj.Transform.Position = position;
+        gObj.Transform.Scale = originalScale;
 
         gObj.AddComponent( j => new SpriteRenderer( newTexture, Color.White, sortingLayer, SpriteEffects.None, j ) );
+
+        if (dissipateInfo.Dissipate)
+        {
+            gObj.AddComponent( j => new LifeTime( gObj, dissipateInfo.Time + (2f * (float)rng.NextDouble()) ) );
+        }
+
+
         var body = gObj.AddComponent( ( obj ) => new RigidBody2D( obj, 1.2f ) );
 
         var dir = position - hitPosition;
@@ -105,7 +114,20 @@ public static class Shatter
         dir = new Vector2( (float)Math.Cos( moveAngle ), (float)Math.Sin( moveAngle ) );
 
 
-        body.AddImpulse( dir, 5f * tForce );
+        body.AddImpulse( dir, 9f * tForce );
 
+    }
+}
+
+
+public struct DissipateInfo 
+{
+    public bool Dissipate { get; private set; }
+    public float Time { get; private set; }
+
+    public DissipateInfo( bool dissipate, float time = 1.5f)
+    {
+        Dissipate = dissipate;
+        Time = time;
     }
 }

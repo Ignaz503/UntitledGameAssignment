@@ -33,14 +33,6 @@ public class TempPlayer : GameObject
         if(mC != null)
             AddComponent(mC);
 
-        //AddComponent( (obj) => new MouseLocationBasedRotationController(obj));
-
-        //AddComponent( (obj) => new ShootScript(obj, 0.4f));
-
-        //AddComponent((obj) => new TextRenderer("test", t == tint.white ? Color.White : Color.LightGray, 1, obj));
-
-        //AddComponent( ( o ) => new ChildInfoPrinter( o ) );
-
         if (name == null)
             Name = $"Temporary Player Gameobject {ID}";
         else

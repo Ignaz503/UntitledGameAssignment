@@ -14,11 +14,11 @@ public class DestructableBox : GameObject
 {
     SpriteRenderer spriteRendrer;
     BoxCollider collider;
-    public DestructableBox(Texture2D sprite, Vector2 position, TempPlayer player):base()
+    public DestructableBox(Texture2D sprite, Vector2 position, DissipateInfo info):base()
     {
         spriteRendrer = AddComponent(j => new SpriteRenderer( sprite, Color.White, SortingLayer.EntitesSubLayer(1), j) );
         collider = AddComponent(j => new BoxCollider(spriteRendrer,j, SortingLayer.Entities));
-        AddComponent( ( obj ) => { return new Destructable( collider, spriteRendrer, player, obj ); } );
+        AddComponent( ( obj ) => { return new Destructable( collider, spriteRendrer, info, obj ); } );
         Transform.Position = position;
     }
 }

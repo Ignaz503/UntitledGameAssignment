@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 public class Bullet : GameObject
 {
-    public Bullet( Vector2 position, Vector2 direction, float speed, GameObject shooter )
+    public Bullet( Vector2 position, Vector2 direction, float speed, GameObject shooter)
     {
         Transform.Position = position;
 
@@ -23,7 +23,13 @@ public class Bullet : GameObject
         SpriteRenderer spriteRen = AddComponent((obj) => new SpriteRenderer("Sprites/bullet", Color.White, 1, obj));
 
         List<SortingLayer> shooterlayer = new List<SortingLayer>();
-        shooterlayer.Add(shooter.GetComponent<BoxCollider>().Layer);
+
+        var shooterCollider  = shooter.GetComponent<BoxCollider>();
+        if (shooterCollider != null)
+        {
+            shooterlayer.Add( shooter.GetComponent<BoxCollider>().Layer );
+        }
+
         AddComponent( (obj) => new BoxCollider(spriteRen, obj, SortingLayer.Entities, shooterlayer) );
 
         RigidBody2D rb = AddComponent( (obj) => new RigidBody2D(obj, 1.01f, 1.0f) );
