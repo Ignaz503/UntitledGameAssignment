@@ -111,7 +111,11 @@ namespace UntitledGameAssignment
             //basic
             CreateAdaptiveUpdateRateChanger();
 
-           var player = LoadPlayers();
+            var floor = new GameObject();
+            floor.Transform.Position = NDCToWorld(Vector2.One * 0.5f);
+            floor.AddComponent(obj => new SpriteRenderer("Sprites/floor_tex", Color.White, SortingLayer.Background, obj));
+
+            var player = LoadPlayers();
 
             //LoadTestGrid();
 
@@ -189,7 +193,10 @@ namespace UntitledGameAssignment
             var winText = new GameObject();
             winText.Transform.Position = NDCToWorld( Vector2.One * .5f );
 
-            winText.AddComponent( j => new TextRenderer( "Congratulations!\nYou Won A Free Death Cupon.\nRedeemed Immeadiately!\nYou died...", Color.Black, SortingLayer.UI, j ) );
+            winText.AddComponent(j => new TextRenderer("            Congratulations!\n" +
+                                                       "You Won A Free Death Coupon.\n" +
+                                                       "       Redeemed Immediately!\n" +
+                                                       "                  ...you died.", Color.White, SortingLayer.UI, j));
             winText.Transform.Scale = Vector2.One * 0.7f;
         }
 
@@ -341,7 +348,7 @@ namespace UntitledGameAssignment
             var winText = new GameObject();
             winText.Transform.Position = NDCToWorld( Vector2.One * .5f );
 
-            winText.AddComponent( j => new TextRenderer( "You Won!", Color.Black, SortingLayer.UI, j ) );
+            winText.AddComponent( j => new TextRenderer( "You Won!", Color.Green, SortingLayer.UI, j ) );
         }
 
         void CreateGoal(Vector2 ndcLocation, GameObject player)
@@ -372,7 +379,8 @@ namespace UntitledGameAssignment
 
             obj.Transform.Position = NDCToWorld(Vector2.One * .45f);
 
-            obj.AddComponent(j => new TextRenderer("Welcome to Tank McShooty\n\nPress -ENTER- to start", Color.Black, SortingLayer.UI, j));
+            obj.AddComponent(j => new TextRenderer("Welcome to Tank McShooty\n\n"+"" +
+                                                   "   Press -ENTER- to start", Color.White, SortingLayer.UI, j));
             
         }
 
