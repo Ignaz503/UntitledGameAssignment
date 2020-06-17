@@ -33,7 +33,7 @@ namespace UntitledGameAssignment.Core.Components
             textRenderer= GameObject.GetComponent<TextRenderer>();
             if (textRenderer == null)
             {
-                textRenderer = GameObject.AddComponent(j=> new TextRenderer( $"Adatptive Update Rate: { currentUpdateRateInMS } ms", Color.Black,SortingLayer.UI,j));
+                textRenderer = GameObject.AddComponent(j=> new TextRenderer( $"Adatptive Update Rate: { currentUpdateRateInMS } ms", Color.White, SortingLayer.UI,j));
             }
             
             PlaceDisplay();
