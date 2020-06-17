@@ -63,6 +63,7 @@
     <Compile Include="Content\Objects\Other\StartController.cs" />
     <Compile Include="Content\Objects\Other\Goal.cs" />
     <Compile Include="Content\Objects\Other\TankShoot.cs" />
+    <Compile Include="Content\Objects\Other\TankShootStationary.cs" />
     <Compile Include="Content\Objects\Path\Path.cs" />
     <Compile Include="Content\Objects\Path\PathCreator.cs" />
     <Compile Include="Content\Objects\Path\PathFollower.cs" />

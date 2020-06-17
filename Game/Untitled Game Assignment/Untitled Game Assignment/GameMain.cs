@@ -75,7 +75,7 @@ namespace UntitledGameAssignment
             AssetManager.Initialize( Content );
 
             //this.VirtualViewport = new UnchangingVirtualViewport(GraphicsDevice);
-            this.VirtualViewport = new AspectRatioMaintainingVirtualViewport(Window,640,480,GraphicsDevice);
+            this.VirtualViewport = new AspectRatioMaintainingVirtualViewport(Window,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height,GraphicsDevice);
 
 
             // TODO: Add your initialization logic here
@@ -101,6 +101,7 @@ namespace UntitledGameAssignment
         /// </summary>
         protected override void LoadContent()
         {
+            TimeInfo.TimeScale = 0f;
             //TODO move to a scene 
             //Cursor c = new Cursor();
             var c = AssetManager.Load<Texture2D>("Sprites/cursor");
@@ -146,7 +147,13 @@ namespace UntitledGameAssignment
                 new Vector2(0.5f,0.1f)
             } );
 
-            CreateGoal( new Vector2( 0.6f, 0.6f ),player );
+
+            CreateStationaryShootingGuards( new Vector2[]
+            {
+                new Vector2(.5f,.3f)
+            }, player, 1f );
+
+            CreateGoal( new Vector2( 0.2f, 0.1f ),player );
 
             SetupCamera(player);
 
@@ -188,10 +195,10 @@ namespace UntitledGameAssignment
 
         private GameObject LoadPlayers()
         {
-            Vector2 camcenter = VirtualViewport.Bounds.Center.ToVector2();
-            TempPlayer player = new TempPlayer(Camera.Active.ScreenToWorld(camcenter), (obj) => new MovementController(obj, walkSpeed: 5.0f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
+            Vector2 center = NDCToWorld(new Vector2(.5f,.5f));
+            TempPlayer player = new TempPlayer(center, (obj) => new MovementController(obj, walkSpeed: 5.0f), SortingLayer.Entities, TempPlayer.tint.white, "Sprites/playershoulders");
             
-            TankTreads treads = new TankTreads(Camera.Active.ScreenToWorld(camcenter), SortingLayer.Entities, player, TankTreads.tint.white, "Sprites/playerlegr");
+            TankTreads treads = new TankTreads(Camera.Active.ScreenToWorld(center), SortingLayer.Entities, player, TankTreads.tint.white, "Sprites/playerlegr");
             List<String> sprites = new List<string>();
             sprites.Add("Sprites/playerlegr");
             sprites.Add("Sprites/playerleg");
@@ -207,71 +214,76 @@ namespace UntitledGameAssignment
             player.AddComponent( ( obj ) => new VectorField( obj, Eval, 0.005f, 0.1f, true ) );;
             player.AddComponent( ( obj ) => new SpawnParticles( obj, 200, 0.75f, "Sprites/firefly", 1.0f ) );
 
-            var pH = player.AddComponent(obj => new Health(2,obj));
+            var pH = player.AddComponent(obj => new Health(3,obj));
             pH.OnDeath += OnPlayerDeath;
 
             //Tank "prefab"
-            var p2 = new TempPlayer( Camera.Active.ScreenToWorld(camcenter + Vector2.One*120f), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
+            var p2 = new TempPlayer( NDCToWorld(new Vector2(.7f,.75f)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
             var p2_treads = new TankTreads(p2.Transform.Position, SortingLayer.EntitesSubLayer(1), p2, TankTreads.tint.white, "Sprites/tank_treads");
             p2.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p2.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
             var h2 = p2.AddComponent(j => new Health(5, j));
             h2.OnDeath += OnDeath;
 
-            var p3 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-110, 90)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
+            var p3 = new TempPlayer(NDCToWorld(new Vector2(.35f,.7f)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
             var p3_treads = new TankTreads(p3.Transform.Position, SortingLayer.EntitesSubLayer(1), p3, TankTreads.tint.white, "Sprites/tank_treads");
             p3.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p3.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
             var h3 = p3.AddComponent(j => new Health(5, j));
             h3.OnDeath += OnDeath;
 
-            var p4 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-110, 150)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
+            var p4 = new TempPlayer(NDCToWorld(new Vector2(.35f,.8f)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
             var p4_treads = new TankTreads(p4.Transform.Position, SortingLayer.EntitesSubLayer(1), p4, TankTreads.tint.white, "Sprites/tank_treads");
             p4.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p4.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
             var h4 = p4.AddComponent(j => new Health(5, j));
             h4.OnDeath += OnDeath;
 
-            var p5 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-170, 90)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.red, "Sprites/tank_gun");
+            var p5 = new TempPlayer(NDCToWorld(new Vector2(.3f,.7f)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.red, "Sprites/tank_gun");
             var p5_treads = new TankTreads(p5.Transform.Position, SortingLayer.EntitesSubLayer(1), p5, TankTreads.tint.red, "Sprites/tank_treads");
             p5.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p5.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
             var h5 = p5.AddComponent(j => new Health(10, j));
             h5.OnDeath += OnDeath;
 
-            var p6 = new TempPlayer(Camera.Active.ScreenToWorld(camcenter + new Vector2(-170, 150)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
+            var p6 = new TempPlayer(NDCToWorld(new Vector2(.3f,.8f)), null, SortingLayer.EntitesSubLayer(1), TempPlayer.tint.white, "Sprites/tank_gun");
             var p6_treads = new TankTreads(p6.Transform.Position, SortingLayer.EntitesSubLayer(1), p6, TankTreads.tint.white, "Sprites/tank_treads");
             p6.AddComponent((obj) => new RigidBody2D(obj, 1.5f, SortingLayer.Entities));
             p6.AddComponent((obj) => new BoxCollider(player.SpriteRen, obj, SortingLayer.Entities));
             var h6 = p6.AddComponent(j => new Health(5, j));
             h6.OnDeath += OnDeath;
 
-            var spike = new Spikeball(Camera.Active.ScreenToWorld(new Vector2(150, 150)));
+            var spike = new Spikeball(NDCToWorld(new Vector2(.15f,.7f)));
             spike.AddComponent( ( obj ) => new GravPull( obj, player, effectiveRadius: 300.0f, rotate: true ) );
 
-            var w1 = new Wall(camcenter + Vector2.UnitX * -20, (float)Math.PI);
+            var w1 = new Wall(NDCToWorld(new Vector2(.6f,.5f)), (float)Math.PI);
             w1.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
-            var w2 = new Wall(camcenter + Vector2.UnitX * -104, (float)Math.PI * 2);
+
+            var w2 = new Wall(NDCToWorld(new Vector2(.6f,.625f)), (float)Math.PI * 2);
             w2.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
-            var w3 = new Wall(camcenter + Vector2.UnitX * -20 + Vector2.UnitY * -64, (float)Math.PI);
+
+            var w3 = new Wall(NDCToWorld(new Vector2(.6f,.375f)), (float)Math.PI);
             w3.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
 
-            var w4 = new Wall(camcenter + Vector2.UnitX * -104 + Vector2.UnitY * -64, (float)Math.PI * 2);
+            var w4 = new Wall(NDCToWorld(new Vector2(.4f,.375f)), (float)Math.PI * 2);
             w4.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
-            var w5 = new Wall(camcenter + Vector2.UnitX * -136 + Vector2.UnitY * -96, (float)Math.PI * 2);
+
+            var w5 = new Wall(NDCToWorld(new Vector2(.365f,.3f)), (float)Math.PI * 2);
             w5.Transform.Rotation = (float)Math.PI * 0.5f;
             w5.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
-            var w6 = new Wall(camcenter + Vector2.UnitX * -136 + Vector2.UnitY * 32, (float)Math.PI * 2);
+
+            var w6 = new Wall(NDCToWorld(new Vector2(.365f,.45f)), (float)Math.PI * 2);
             w6.Transform.Rotation = (float)Math.PI * 0.5f;
             w6.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
 
-            var w7 = new Wall(camcenter + Vector2.UnitX * -20 + Vector2.UnitY * 32, (float)Math.PI * 2);
+            var w7 = new Wall(NDCToWorld(new Vector2(.6f,.75f)), (float)Math.PI * 2);
             w7.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
-            var w8 = new Wall(camcenter + Vector2.UnitX * 12 + Vector2.UnitY * 64, (float)Math.PI * 2);
+
+            var w8 = new Wall(NDCToWorld(new Vector2(.565f,.825f)), (float)Math.PI * 2);
             w8.Transform.Rotation = (float)Math.PI * 0.5f;
             w8.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
 
-            var w9 = new Wall(camcenter + Vector2.UnitX * -236 + Vector2.UnitY * 64, (float)Math.PI * 2);
+            var w9 = new Wall(NDCToWorld(new Vector2(.32f,.51f)), (float)Math.PI * 2);
             w9.AddComponent((obj) => new RigidBody2D(obj, 50.0f, SortingLayer.Entities, false));
 
             /*var red_heart = new PickupHeart(Camera.Active.ScreenToWorld(new Vector2(130, 100)), heal: player, Color.Red);
@@ -361,13 +373,14 @@ namespace UntitledGameAssignment
             obj.Transform.Position = NDCToWorld(Vector2.One * .45f);
 
             obj.AddComponent(j => new TextRenderer("Welcome to Tank McShooty\n\nPress -ENTER- to start", Color.Black, SortingLayer.UI, j));
+            
         }
 
 
         Vector2 NDCToWorld( Vector2 ndc ) 
         {
-            var screenWidth = GraphicsDevice.Viewport.Width;
-            var screenHeight = GraphicsDevice.Viewport.Height;
+            var screenWidth = VirtualViewport.Width;
+            var screenHeight = VirtualViewport.Height;
 
             return Camera.Active.ScreenToWorld(new Vector2(ndc.X*screenWidth,ndc.Y*screenHeight));
         }
@@ -382,12 +395,46 @@ namespace UntitledGameAssignment
             obj.Destroy();
         }
 
+        void CreateStationaryShootingGuards(Vector2[] positionsNDC, GameObject player, float shootFrequency) 
+        {
+            for (int i = 0; i < positionsNDC.Length; i++)
+            {
+                var p = NDCToWorld(positionsNDC[i]);
+
+                var guard = new GameObject();
+                guard.Name = $"Shooting Guard {i}";
+                guard.Transform.Position = p;
+                guard.Transform.Rotation = Mathf.PI;
+
+                var gun = new GameObject();
+                gun.AddComponent( j => new SpriteRenderer( "Sprites/tank_gun", Color.White, SortingLayer.EntitesSubLayer( 2 ), j ) );
+                gun.Transform.Parent = guard.Transform;
+                gun.Transform.LocalPosition = Vector2.Zero;
+                gun.Transform.LocalRotation = 0f;
+
+
+                var sRenderer = guard.AddComponent( ( j ) => new SpriteRenderer( "Sprites/tank_treads", Color.White, SortingLayer.EntitesSubLayer( 1 ), j ) );
+
+                guard.AddComponent( ( obj ) => new BoxCollider( sRenderer, obj, SortingLayer.Entities ) );
+                guard.AddComponent( ( obj ) => new RigidBody2D( obj, 1.5f, SortingLayer.Entities ) );
+                var h = guard.AddComponent( j => new Health( 5, j ) );
+
+                h.OnDeath += OnDeath;
+
+                guard.AddComponent( j => new TankShootStationary( player.Transform, gun.Transform, j, 10f, shootFrequency,dist: 250) );
+
+                //var gun sprite
+
+            }
+        }
+
+
         void CreatePatrol(GameObject player, Vector2[] pointsNDC, float shootFrequency, Color tint ) 
         {
             var pF = new GameObject();
             pF.Name = nameof( PathFollower );
 
-            pF.Transform.Position = Camera.Active.ScreenToWorld( new Vector2( 500, 80 ) );
+            //pF.Transform.Position = Camera.Active.ScreenToWorld( new Vector2( 500, 80 ) );
 
             var sRenderer = pF.AddComponent( ( j ) => new SpriteRenderer( "Sprites/tank_treads", tint, SortingLayer.EntitesSubLayer( 1 ), j ) );
 

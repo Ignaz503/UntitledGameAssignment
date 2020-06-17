@@ -1,48 +1,43 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Loyc.Geometry;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using UntitledGameAssignment.Core;
 using UntitledGameAssignment.Core.Components;
 using UntitledGameAssignment.Core.GameObjects;
 using Util.CustomMath;
 using Util.FrameTimeInfo;
-using Util.Input;
-using Util.SortingLayers;
 
-class TankShoot : Component,IUpdate
+class TankShootStationary : Component, IUpdate
 {
     float speed;
-    Vector2 prevPos;
-    Vector2 prevDir;
     Transform target;
+    Transform turret;
 
-    float dist;
-    float distSquared => dist * dist;
     float frequency;
     float currentCount;
-    public TankShoot( Transform target, GameObject @object, float speed = 15f, float frequency = 1, float dist= 250): base(@object)
+    float dist;
+
+    float distSquared => dist * dist;
+    public TankShootStationary( Transform target, Transform turret, GameObject @object, float speed = 15f, float frequency = 1, float dist = 50f ) : base( @object )
     {
         this.speed = speed;
-        this.prevPos = Transform.Position;
         this.target = target;
         this.frequency = frequency;
-        this.dist = dist;
+        this.turret = turret;
         currentCount = frequency;
+        this.dist = dist;
 
         target.GameObject.OnDestroying += OnTargetDeath;
     }
 
 
     public override void OnDestroy()
-    {}
+    { }
 
-    void OnTargetDeath(GameObject tar) 
+    void OnTargetDeath( GameObject tar )
     {
         tar.OnDestroying -= OnTargetDeath;
         target = null;
@@ -50,25 +45,22 @@ class TankShoot : Component,IUpdate
 
     public void Update()
     {
+        if (target == null)
+        { return; }
         currentCount += TimeInfo.DeltaTime;
-        var d = Transform.Position - prevPos;
+        var d = target.Position-Transform.Position;       ;
 
         if (d.LengthSquared() > 0f)
             d.Normalize();
-        else
-            d = prevDir;
 
         if (CheckIfShoot())
         {
+            turret.Rotation = (VectorMath.Angle( d.X, d.Y ) + 90f)* Mathf.Deg2Rad;
+
             currentCount = 0f;
             Bullet b = new Bullet(Transform.Position + d*10, d, speed, GameObject);
             b.AddComponent( ( obj ) => new LifeTime( obj, 1.5f ) );
         }
-        if (d.LengthSquared() > 0)
-        { 
-            prevDir = d;
-        }
-        prevPos = Transform.Position;
     }
 
     private bool CheckIfShoot()
@@ -83,7 +75,6 @@ class TankShoot : Component,IUpdate
         float distToTarget = tarDir.LengthSquared();
         tarDir.Normalize();
 
-        return Vector2.Dot( tarDir, v ) > .9f && currentCount >= frequency && distToTarget <= distSquared;
+        return Vector2.Dot( tarDir, v ) > .8f && currentCount >= frequency && distToTarget <= distSquared;
     }
 }
-

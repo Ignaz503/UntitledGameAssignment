@@ -10,6 +10,7 @@ using UntitledGameAssignment.Core.GameObjects;
 using UntitledGameAssignment.Core.SceneGraph;
 using Util.Input;
 using Util.CustomDebug;
+using Util.FrameTimeInfo;
 
 class StartController : Component, IUpdate
 {
@@ -31,6 +32,7 @@ class StartController : Component, IUpdate
             {
                 h.Enable();
             }
+            TimeInfo.TimeScale = 1f;
             this.GameObject.Destroy();
         }
         
