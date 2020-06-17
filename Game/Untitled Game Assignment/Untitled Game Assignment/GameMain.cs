@@ -129,8 +129,8 @@ namespace UntitledGameAssignment
                 new Vector2(-0.01f, 0.2f ),
                 new Vector2(0.05f,0.8f),
                 new Vector2(0.5f,1f),
-                new Vector2(0.75f,0.8f),
                 new Vector2(0.8f,0.8f),
+                new Vector2(0.9f,0.9f),
                 new Vector2(1.0f,1.2f)
             }, .2f, Color.Red ) ;
 
